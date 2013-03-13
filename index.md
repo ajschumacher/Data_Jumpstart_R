@@ -1,7 +1,7 @@
 ---
 
-title       : Introduction to R
-subtitle    : bit.ly/NYUintroR
+title       : Intermediate Topics in R
+subtitle    : bit.ly/NYUtopicR
 author      : Aaron Schumacher
 job         : Senior Data Services Specialist
 biglogo     : data_services_logo.png
@@ -13,7 +13,7 @@ mode        : selfcontained # {standalone, draft}
 license     : by-nc-sa
 github:
   user: ajschumacher
-  repo: Introduction_to_R
+  repo: Topics_in_R
 
 --- &twocol
 
@@ -45,7 +45,7 @@ github:
 
 --- &twocol
 
-## Introduction to R
+## Intermediate Topics in R
 
 *** left
 
@@ -124,7 +124,7 @@ github:
 
 The Comprehensive R Archive Network (CRAN) hosts this many packages.
 
-This is as of `Mon Mar 11 13:28:19 2013`.
+This is as of `Wed Mar 13 11:57:14 2013`.
 
 
 ```r
@@ -132,7 +132,20 @@ length(unique(rownames(available.packages())))
 ```
 
 ```
-## [1] 4262
+## Warning: unable to resolve 'lib.stat.cmu.edu'
+```
+
+```
+## Warning: unable to resolve 'lib.stat.cmu.edu'
+```
+
+```
+## Warning: unable to access index for repository
+## http://lib.stat.cmu.edu/R/CRAN/bin/macosx/leopard/contrib/2.15
+```
+
+```
+## [1] 0
 ```
 
 
@@ -588,26 +601,7 @@ sum(my.vector < 4)  #  Alternative: length(my.vector[my.vector < 4])
 
 
 ```r
-(my.data <- read.csv("http://bit.ly/NYUdataset"))
-```
-
-```
-##    id gender age time health1 health2 health3 health4 health5 health6
-## 1   1      M  51   15       1       4       2       1       4       5
-## 2   2      F  35   30       2       3       3       2       3       4
-## 3   3      F  29   25       5       2       4       2       1       3
-## 4   4      M  21   40       5       1       5       4       2       1
-## 5   5      M  56   30       2       4       2       4       3       3
-## 6   6      M  72   10       1       5       4       2       4       5
-## 7   7      F  46   20       2       5       3       1       3       4
-## 8   8      M  33   25       5       2       4       5       2       1
-## 9   9      F  36   30       3       3       4       5       2       2
-## 10 10      M  42   20       3       3       3       4       2       4
-## 11 11      F  41   10       2       4       3       3       3       3
-## 12 12      F  57   45       1       4       2       1       5       5
-## 13 13      M  30   10       3       2       3       4       1       3
-## 14 14      F  48   15       5       3       3       4       2       2
-## 15 15      M  32    0       4       2       4       3       2       2
+# (my.data <- read.csv('http://bit.ly/NYUdataset'))
 ```
 
 
@@ -641,7 +635,7 @@ my.data[2, "age"]
 ```
 
 ```
-## [1] 35
+## Error: object 'my.data' not found
 ```
 
 
@@ -682,8 +676,26 @@ To add / compute / make a new column, just assign to it:
 
 ```r
 my.data$number.five <- 5
+```
+
+```
+## Error: object 'my.data' not found
+```
+
+```r
 my.data$mean.1.2 <- my.data$health1 + my.data$health2
+```
+
+```
+## Error: object 'my.data' not found
+```
+
+```r
 my.data$health <- rowMeans(my.data[5:10])
+```
+
+```
+## Error: object 'my.data' not found
 ```
 
 
@@ -692,8 +704,26 @@ To drop / delete / remove a column, you have options:
 
 ```r
 my.data$number.five <- NULL         #  remove from the data frame 'in place'
+```
+
+```
+## Error: object 'my.data' not found
+```
+
+```r
 my.new.data <- my.data[1:10]        #  make a new smaller data frame
+```
+
+```
+## Error: object 'my.data' not found
+```
+
+```r
 my.new.data <- my.data[-c(11,12)]   #  same as last
+```
+
+```
+## Error: object 'my.data' not found
 ```
 
 
@@ -760,7 +790,9 @@ After installing and loading a package, you can use the functions it provides.
 qplot(x = carat, y = price, color = cut, data = diamonds) + theme_bw()
 ```
 
-![plot of chunk unnamed-chunk-36](figure/unnamed-chunk-36.png) 
+```
+## Error: could not find function "revalue"
+```
 
 
 ---

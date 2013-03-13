@@ -1,7 +1,7 @@
 ---
 
-title       : Introduction to R
-subtitle    : bit.ly/NYUintroR
+title       : Intermediate Topics in R
+subtitle    : bit.ly/NYUtopicR
 author      : Aaron Schumacher
 job         : Senior Data Services Specialist
 biglogo     : data_services_logo.png
@@ -13,7 +13,7 @@ mode        : selfcontained # {standalone, draft}
 license     : by-nc-sa
 github:
   user: ajschumacher
-  repo: Introduction_to_R
+  repo: Topics_in_R
 
 --- &twocol
 
@@ -48,7 +48,7 @@ options(repos='http://lib.stat.cmu.edu/R/CRAN/')
 
 --- &twocol
 
-## Introduction to R
+## Intermediate Topics in R
 
 *** left
 
@@ -404,7 +404,7 @@ sum(my.vector < 4)  #  Alternative: length(my.vector[my.vector < 4])
 * Data frames are lists with every vector equal length, and you get row names and column names.
 
 ```{r}
-(my.data <- read.csv('http://bit.ly/NYUdataset'))
+#(my.data <- read.csv('http://bit.ly/NYUdataset'))
 ```
 
 ---

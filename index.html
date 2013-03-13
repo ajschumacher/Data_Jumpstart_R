@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Introduction to R</title>
+  <title>Intermediate Topics in R</title>
   <meta charset="utf-8">
-  <meta name="description" content="Introduction to R">
+  <meta name="description" content="Intermediate Topics in R">
   <meta name="author" content="Aaron Schumacher">
   <meta name="generator" content="slidify" />
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -39,11 +39,11 @@
     <!-- Should I move this to a Local Layout File? -->
     <slide class="title-slide segue nobackground">
       <hgroup class="auto-fadein">
-        <h1>Introduction to R</h1>
-        <h2>bit.ly/NYUintroR</h2>
+        <h1>Intermediate Topics in R</h1>
+        <h2>bit.ly/NYUtopicR</h2>
         <p>Aaron Schumacher<br/>Senior Data Services Specialist</p>
       </hgroup>
-      <a href="https://github.com/ajschumacher/Introduction_to_R/zipball/gh-pages" class="example">
+      <a href="https://github.com/ajschumacher/Topics_in_R/zipball/gh-pages" class="example">
         Download
       </a>
       
@@ -93,7 +93,7 @@
 
       <slide class="" id="slide-2" style="background:;">
   <hgroup>
-    <h2>Introduction to R</h2>
+    <h2>Intermediate Topics in R</h2>
   </hgroup>
   <article>
     
@@ -229,12 +229,22 @@
   <article>
     <p>The Comprehensive R Archive Network (CRAN) hosts this many packages.</p>
 
-<p>This is as of <code>Mon Mar 11 13:28:19 2013</code>.</p>
+<p>This is as of <code>Wed Mar 13 11:57:14 2013</code>.</p>
 
 <pre><code class="r">length(unique(rownames(available.packages())))
 </code></pre>
 
-<pre><code>## [1] 4262
+<pre><code>## Warning: unable to resolve &#39;lib.stat.cmu.edu&#39;
+</code></pre>
+
+<pre><code>## Warning: unable to resolve &#39;lib.stat.cmu.edu&#39;
+</code></pre>
+
+<pre><code>## Warning: unable to access index for repository
+## http://lib.stat.cmu.edu/R/CRAN/bin/macosx/leopard/contrib/2.15
+</code></pre>
+
+<pre><code>## [1] 0
 </code></pre>
 
 <p>And there are many more in addition to the ones on CRAN.</p>
@@ -694,25 +704,7 @@ my.vector
 <li>Data frames are lists with every vector equal length, and you get row names and column names.</li>
 </ul>
 
-<pre><code class="r">(my.data &lt;- read.csv(&quot;http://bit.ly/NYUdataset&quot;))
-</code></pre>
-
-<pre><code>##    id gender age time health1 health2 health3 health4 health5 health6
-## 1   1      M  51   15       1       4       2       1       4       5
-## 2   2      F  35   30       2       3       3       2       3       4
-## 3   3      F  29   25       5       2       4       2       1       3
-## 4   4      M  21   40       5       1       5       4       2       1
-## 5   5      M  56   30       2       4       2       4       3       3
-## 6   6      M  72   10       1       5       4       2       4       5
-## 7   7      F  46   20       2       5       3       1       3       4
-## 8   8      M  33   25       5       2       4       5       2       1
-## 9   9      F  36   30       3       3       4       5       2       2
-## 10 10      M  42   20       3       3       3       4       2       4
-## 11 11      F  41   10       2       4       3       3       3       3
-## 12 12      F  57   45       1       4       2       1       5       5
-## 13 13      M  30   10       3       2       3       4       1       3
-## 14 14      F  48   15       5       3       3       4       2       2
-## 15 15      M  32    0       4       2       4       3       2       2
+<pre><code class="r"># (my.data &lt;- read.csv(&#39;http://bit.ly/NYUdataset&#39;))
 </code></pre>
 
   </article>
@@ -741,7 +733,7 @@ with(my.data, gender)
 <pre><code class="r">my.data[2, &quot;age&quot;]
 </code></pre>
 
-<pre><code>## [1] 35
+<pre><code>## Error: object &#39;my.data&#39; not found
 </code></pre>
 
   </article>
@@ -788,15 +780,41 @@ subset(my.data, gender == &quot;F&quot;, select = &quot;time&quot;)
     <p>To add / compute / make a new column, just assign to it:</p>
 
 <pre><code class="r">my.data$number.five &lt;- 5
-my.data$mean.1.2 &lt;- my.data$health1 + my.data$health2
-my.data$health &lt;- rowMeans(my.data[5:10])
+</code></pre>
+
+<pre><code>## Error: object &#39;my.data&#39; not found
+</code></pre>
+
+<pre><code class="r">my.data$mean.1.2 &lt;- my.data$health1 + my.data$health2
+</code></pre>
+
+<pre><code>## Error: object &#39;my.data&#39; not found
+</code></pre>
+
+<pre><code class="r">my.data$health &lt;- rowMeans(my.data[5:10])
+</code></pre>
+
+<pre><code>## Error: object &#39;my.data&#39; not found
 </code></pre>
 
 <p>To drop / delete / remove a column, you have options:</p>
 
 <pre><code class="r">my.data$number.five &lt;- NULL         #  remove from the data frame &#39;in place&#39;
-my.new.data &lt;- my.data[1:10]        #  make a new smaller data frame
-my.new.data &lt;- my.data[-c(11,12)]   #  same as last
+</code></pre>
+
+<pre><code>## Error: object &#39;my.data&#39; not found
+</code></pre>
+
+<pre><code class="r">my.new.data &lt;- my.data[1:10]        #  make a new smaller data frame
+</code></pre>
+
+<pre><code>## Error: object &#39;my.data&#39; not found
+</code></pre>
+
+<pre><code class="r">my.new.data &lt;- my.data[-c(11,12)]   #  same as last
+</code></pre>
+
+<pre><code>## Error: object &#39;my.data&#39; not found
 </code></pre>
 
   </article>
@@ -866,7 +884,8 @@ library(ggplot2)             # Do this once per R session.
 <pre><code class="r">qplot(x = carat, y = price, color = cut, data = diamonds) + theme_bw()
 </code></pre>
 
-<p><img src="figure/unnamed-chunk-36.png" alt="plot of chunk unnamed-chunk-36"> </p>
+<pre><code>## Error: could not find function &quot;revalue&quot;
+</code></pre>
 
   </article>
   <!-- Presenter Notes -->

@@ -1,3 +1,3 @@
-# Introduction to R
+# Intermediate Topics in R
 
-My NYU Data Services Introduction to R slides in progress.
+My NYU Data Services Intermediate Topics in R slides in progress.
