@@ -52,14 +52,16 @@ options(repos='http://lib.stat.cmu.edu/R/CRAN/')
 
 *** left
 
-* Why use R?
-* What is R / RStudio?
-* Everything is a function.
-* Everything is a vector.
-* ... Data Frames!
-* Some statistics
-* Base graphics
-* More!
+* Formulas in R (for models, plots, ...)
+* Working with (model) objects (lm, glm, ...)
+* Programming flow control (if, for, while, ...)
+* Data set manipulation (merge, wide/long, ...)
+* String manipulation (substr, grep, sub, ...)
+* Class manipulation (factor, string, date, ...)
+* SQL in R (SELECT * FROM ...)
+* 2-D plotting (base, lattice, ggplot2, ...)
+* Network (graph) visualization
+* PCA / clustering / 3-D plotting
 
 *** right
 
@@ -68,28 +70,35 @@ options(repos='http://lib.stat.cmu.edu/R/CRAN/')
 
 ---
 
-## Everything is a function.
+## Data set for the day: `iris`
 
-Anything you want to do in R is done by telling R to run a function.
-
-To run a function with no arguments, follow its name with parentheses.
-
-```{r, eval=FALSE}
-help()
+```{r, tidy=FALSE}
+data(iris)  #  Load included data set into your workspace.
+str(iris)   #  Display structure of data set.
 ```
 
-Arguments are passed inside the parentheses. Arguments are usually named, but names can be omitted if it's unambiguous.
+---
+
+## Formulas in R
+
+Formula notation featuring '`~`' is used in various forms across much of R:
+
+* Defining models
 
 ```{r, eval=FALSE}
-help(topic=getwd)
-help(getwd)
+lm(Sepal.Length ~ Species, data=iris)
 ```
 
-If you don't include parentheses, R will try to give you the function itself.
+* Aggregating / reshaping data
 
 ```{r, eval=FALSE}
-help
-help.search
+aggregate(Sepal.Length ~ Species, data=iris, FUN=mean)
+```
+
+* Plotting
+
+```{r, eval=FALSE}
+boxplot(Sepal.Length ~ Species, data=iris)
 ```
 
 ---

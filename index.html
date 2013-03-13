@@ -99,14 +99,16 @@
     
 <div style='float:left;width:48%;' class='centered'>
   <ul>
-<li>Why use R?</li>
-<li>What is R / RStudio?</li>
-<li>Everything is a function.</li>
-<li>Everything is a vector.</li>
-<li>... Data Frames!</li>
-<li>Some statistics</li>
-<li>Base graphics</li>
-<li>More!</li>
+<li>Formulas in R (for models, plots, ...)</li>
+<li>Working with (model) objects (lm, glm, ...)</li>
+<li>Programming flow control (if, for, while, ...)</li>
+<li>Data set manipulation (merge, wide/long, ...)</li>
+<li>String manipulation (substr, grep, sub, ...)</li>
+<li>Class manipulation (factor, string, date, ...)</li>
+<li>SQL in R (SELECT * FROM ...)</li>
+<li>2-D plotting (base, lattice, ggplot2, ...)</li>
+<li>Network (graph) visualization</li>
+<li>PCA / clustering / 3-D plotting</li>
 </ul>
 
 
@@ -124,26 +126,19 @@
 
       <slide class="" id="slide-3" style="background:;">
   <hgroup>
-    <h2>Everything is a function.</h2>
+    <h2>Data set for the day: <code>iris</code></h2>
   </hgroup>
   <article>
-    <p>Anything you want to do in R is done by telling R to run a function.</p>
-
-<p>To run a function with no arguments, follow its name with parentheses.</p>
-
-<pre><code class="r">help()
+    <pre><code class="r">data(iris)  #  Load included data set into your workspace.
+str(iris)   #  Display structure of data set.
 </code></pre>
 
-<p>Arguments are passed inside the parentheses. Arguments are usually named, but names can be omitted if it&#39;s unambiguous.</p>
-
-<pre><code class="r">help(topic = getwd)
-help(getwd)
-</code></pre>
-
-<p>If you don&#39;t include parentheses, R will try to give you the function itself.</p>
-
-<pre><code class="r">help
-help.search
+<pre><code>## &#39;data.frame&#39;:    150 obs. of  5 variables:
+##  $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
+##  $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
+##  $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
+##  $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
+##  $ Species     : Factor w/ 3 levels &quot;setosa&quot;,&quot;versicolor&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
 </code></pre>
 
   </article>
@@ -151,6 +146,38 @@ help.search
 </slide>
 
       <slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Formulas in R</h2>
+  </hgroup>
+  <article>
+    <p>Formula notation featuring &#39;<code>~</code>&#39; is used in various forms across much of R:</p>
+
+<ul>
+<li>Defining models</li>
+</ul>
+
+<pre><code class="r">lm(Sepal.Length ~ Species, data = iris)
+</code></pre>
+
+<ul>
+<li>Aggregating / reshaping data</li>
+</ul>
+
+<pre><code class="r">aggregate(Sepal.Length ~ Species, data = iris, FUN = mean)
+</code></pre>
+
+<ul>
+<li>Plotting</li>
+</ul>
+
+<pre><code class="r">boxplot(Sepal.Length ~ Species, data = iris)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-5" style="background:;">
   <hgroup>
     <h2>Everything is a function.</h2>
   </hgroup>
@@ -175,7 +202,7 @@ help.search
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-5" style="background:;">
+      <slide class="" id="slide-6" style="background:;">
   <hgroup>
     <h2>Everything is a function.</h2>
   </hgroup>
@@ -200,7 +227,7 @@ help.search
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-6" style="background:;">
+      <slide class="" id="slide-7" style="background:;">
   <hgroup>
     <h2>Everything is a function.</h2>
   </hgroup>
@@ -223,7 +250,7 @@ help.search
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-7" style="background:;">
+      <slide class="" id="slide-8" style="background:;">
   <hgroup>
     <h2>Everything is a vector.</h2>
   </hgroup>
@@ -249,7 +276,7 @@ help.search
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-8" style="background:;">
+      <slide class="" id="slide-9" style="background:;">
   <hgroup>
     <h2><code>c()</code> is a function that combines vectors</h2>
   </hgroup>
@@ -274,7 +301,7 @@ mean(c(2, 4))   #  this passes the function one argument,
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-9" style="background:;">
+      <slide class="" id="slide-10" style="background:;">
   <hgroup>
     <h2>Everything is a vector. Vector of what?</h2>
   </hgroup>
@@ -303,7 +330,7 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-10" style="background:;">
+      <slide class="" id="slide-11" style="background:;">
   <hgroup>
     <h2>Vectorized Operations and Recycling</h2>
   </hgroup>
@@ -328,7 +355,7 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-11" style="background:;">
+      <slide class="" id="slide-12" style="background:;">
   <hgroup>
     <h2>Vectorized Operations and Recycling</h2>
   </hgroup>
@@ -348,7 +375,7 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-12" style="background:;">
+      <slide class="" id="slide-13" style="background:;">
   <hgroup>
     <h2>Vectorized Operations and Recycling</h2>
   </hgroup>
@@ -372,7 +399,7 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-13" style="background:;">
+      <slide class="" id="slide-14" style="background:;">
   <hgroup>
     <h2>Vectorized Operations and Recycling</h2>
   </hgroup>
@@ -393,7 +420,7 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-14" style="background:;">
+      <slide class="" id="slide-15" style="background:;">
   <hgroup>
     <h2>Things can have names.</h2>
   </hgroup>
@@ -417,7 +444,7 @@ my.vector
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-15" style="background:;">
+      <slide class="" id="slide-16" style="background:;">
   <hgroup>
     <h2>Selecting from vectors with <code>[ ]</code></h2>
   </hgroup>
@@ -447,7 +474,7 @@ my.vector
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-16" style="background:;">
+      <slide class="" id="slide-17" style="background:;">
   <hgroup>
     <h2>Using logical selection</h2>
   </hgroup>
@@ -464,7 +491,7 @@ my.vector
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-17" style="background:;">
+      <slide class="" id="slide-18" style="background:;">
   <hgroup>
     <h2>Using logical selection</h2>
   </hgroup>
@@ -486,7 +513,7 @@ my.vector
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-18" style="background:;">
+      <slide class="" id="slide-19" style="background:;">
   <hgroup>
     <h2>Good things to do with vectors</h2>
   </hgroup>
@@ -513,7 +540,7 @@ my.vector
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-19" style="background:;">
+      <slide class="" id="slide-20" style="background:;">
   <hgroup>
     <h2>... Data Frames!</h2>
   </hgroup>
@@ -539,7 +566,7 @@ my.vector
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-20" style="background:;">
+      <slide class="" id="slide-21" style="background:;">
   <hgroup>
     <h2>Working with data frames</h2>
   </hgroup>
@@ -568,7 +595,7 @@ with(my.data, gender)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-21" style="background:;">
+      <slide class="" id="slide-22" style="background:;">
   <hgroup>
     <h2>Working with data frames?</h2>
   </hgroup>
@@ -579,7 +606,7 @@ with(my.data, gender)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-22" style="background:;">
+      <slide class="" id="slide-23" style="background:;">
   <hgroup>
     <h2>Working with data frames!</h2>
   </hgroup>
@@ -600,7 +627,7 @@ subset(my.data, gender == &quot;F&quot;, select = &quot;time&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-23" style="background:;">
+      <slide class="" id="slide-24" style="background:;">
   <hgroup>
     <h2>Working with data frames</h2>
   </hgroup>
@@ -649,7 +676,7 @@ subset(my.data, gender == &quot;F&quot;, select = &quot;time&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-24" style="background:;">
+      <slide class="" id="slide-25" style="background:;">
   <hgroup>
     <h2>Some Statistics</h2>
   </hgroup>
@@ -672,7 +699,7 @@ aov(health1 ~ age + gender, data = my.data)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-25" style="background:;">
+      <slide class="" id="slide-26" style="background:;">
   <hgroup>
     <h2>Base graphics</h2>
   </hgroup>
@@ -696,7 +723,7 @@ plot(my.model)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-26" style="background:;">
+      <slide class="" id="slide-27" style="background:;">
   <hgroup>
     <h2>More!</h2>
   </hgroup>
@@ -712,13 +739,13 @@ library(ggplot2)             # Do this once per R session.
 <pre><code class="r">qplot(x = carat, y = price, color = cut, data = diamonds) + theme_bw()
 </code></pre>
 
-<p><img src="figure/unnamed-chunk-35.png" alt="plot of chunk unnamed-chunk-35"> </p>
+<p><img src="figure/unnamed-chunk-36.png" alt="plot of chunk unnamed-chunk-36"> </p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-27" style="background:;">
+      <slide class="" id="slide-28" style="background:;">
   <hgroup>
     <h2>The source for this presentation</h2>
   </hgroup>
@@ -729,7 +756,7 @@ library(ggplot2)             # Do this once per R session.
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-28" style="background:;">
+      <slide class="" id="slide-29" style="background:;">
   <hgroup>
     <h2>Thank you! Questions! Survey!</h2>
   </hgroup>

@@ -49,14 +49,16 @@ github:
 
 *** left
 
-* Why use R?
-* What is R / RStudio?
-* Everything is a function.
-* Everything is a vector.
-* ... Data Frames!
-* Some statistics
-* Base graphics
-* More!
+* Formulas in R (for models, plots, ...)
+* Working with (model) objects (lm, glm, ...)
+* Programming flow control (if, for, while, ...)
+* Data set manipulation (merge, wide/long, ...)
+* String manipulation (substr, grep, sub, ...)
+* Class manipulation (factor, string, date, ...)
+* SQL in R (SELECT * FROM ...)
+* 2-D plotting (base, lattice, ggplot2, ...)
+* Network (graph) visualization
+* PCA / clustering / 3-D plotting
 
 *** right
 
@@ -65,33 +67,51 @@ github:
 
 ---
 
-## Everything is a function.
-
-Anything you want to do in R is done by telling R to run a function.
-
-To run a function with no arguments, follow its name with parentheses.
+## Data set for the day: `iris`
 
 
 ```r
-help()
+data(iris)  #  Load included data set into your workspace.
+str(iris)   #  Display structure of data set.
+```
+
+```
+## 'data.frame':	150 obs. of  5 variables:
+##  $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
+##  $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
+##  $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
+##  $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
+##  $ Species     : Factor w/ 3 levels "setosa","versicolor",..: 1 1 1 1 1 1 1 1 1 1 ...
 ```
 
 
-Arguments are passed inside the parentheses. Arguments are usually named, but names can be omitted if it's unambiguous.
+---
+
+## Formulas in R
+
+Formula notation featuring '`~`' is used in various forms across much of R:
+
+* Defining models
 
 
 ```r
-help(topic = getwd)
-help(getwd)
+lm(Sepal.Length ~ Species, data = iris)
 ```
 
 
-If you don't include parentheses, R will try to give you the function itself.
+* Aggregating / reshaping data
 
 
 ```r
-help
-help.search
+aggregate(Sepal.Length ~ Species, data = iris, FUN = mean)
+```
+
+
+* Plotting
+
+
+```r
+boxplot(Sepal.Length ~ Species, data = iris)
 ```
 
 
@@ -678,7 +698,7 @@ After installing and loading a package, you can use the functions it provides.
 qplot(x = carat, y = price, color = cut, data = diamonds) + theme_bw()
 ```
 
-![plot of chunk unnamed-chunk-35](figure/unnamed-chunk-35.png) 
+![plot of chunk unnamed-chunk-36](figure/unnamed-chunk-36.png) 
 
 
 ---
