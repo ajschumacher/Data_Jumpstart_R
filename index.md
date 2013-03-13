@@ -51,7 +51,8 @@ github:
 
 * Formulas in R (for models, plots, ...)
 * Working with (model) objects (lm, glm, ...)
-* Programming flow control (if, for, while, ...)
+* Programming: functions
+* Programming: flow control (if, for, while, ...)
 * Data set manipulation (merge, wide/long, ...)
 * String manipulation (substr, grep, sub, ...)
 * Class manipulation (factor, string, date, ...)
@@ -67,7 +68,7 @@ github:
 
 ---
 
-## Data set for the day: `iris`
+## Data set: `iris`
 
 
 ```r
@@ -112,6 +113,36 @@ aggregate(Sepal.Length ~ Species, data = iris, FUN = mean)
 
 ```r
 boxplot(Sepal.Length ~ Species, data = iris)
+```
+
+
+---
+
+## Formulas in R
+
+Model based on a categorical variable, an interaction, the log of a variable, and zero intercept:
+
+
+```r
+lm(Sepal.Length ~ Species + Species:Petal.Length + log(Petal.Width) - 1, data=iris)
+?formula  #  More help for model formulas.
+```
+
+
+Use '`.`' to select all otherwise unused variables in a data frame:
+
+
+```r
+aggregate(. ~ Species, data = iris, FUN = mean)
+```
+
+
+In `lattice` the bar ('`|`') introduces small multiples conditioned on what follows:
+
+
+```r
+library(lattice)
+xyplot(Sepal.Length ~ Sepal.Width | Species, data = iris)
 ```
 
 
@@ -698,7 +729,9 @@ After installing and loading a package, you can use the functions it provides.
 qplot(x = carat, y = price, color = cut, data = diamonds) + theme_bw()
 ```
 
-![plot of chunk unnamed-chunk-36](figure/unnamed-chunk-36.png) 
+```
+## Error: could not find function "revalue"
+```
 
 
 ---

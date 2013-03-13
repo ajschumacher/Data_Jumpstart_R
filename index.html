@@ -101,7 +101,8 @@
   <ul>
 <li>Formulas in R (for models, plots, ...)</li>
 <li>Working with (model) objects (lm, glm, ...)</li>
-<li>Programming flow control (if, for, while, ...)</li>
+<li>Programming: functions</li>
+<li>Programming: flow control (if, for, while, ...)</li>
 <li>Data set manipulation (merge, wide/long, ...)</li>
 <li>String manipulation (substr, grep, sub, ...)</li>
 <li>Class manipulation (factor, string, date, ...)</li>
@@ -126,7 +127,7 @@
 
       <slide class="" id="slide-3" style="background:;">
   <hgroup>
-    <h2>Data set for the day: <code>iris</code></h2>
+    <h2>Data set: <code>iris</code></h2>
   </hgroup>
   <article>
     <pre><code class="r">data(iris)  #  Load included data set into your workspace.
@@ -179,6 +180,32 @@ str(iris)   #  Display structure of data set.
 
       <slide class="" id="slide-5" style="background:;">
   <hgroup>
+    <h2>Formulas in R</h2>
+  </hgroup>
+  <article>
+    <p>Model based on a categorical variable, an interaction, the log of a variable, and zero intercept:</p>
+
+<pre><code class="r">lm(Sepal.Length ~ Species + Species:Petal.Length + log(Petal.Width) - 1, data=iris)
+?formula  #  More help for model formulas.
+</code></pre>
+
+<p>Use &#39;<code>.</code>&#39; to select all otherwise unused variables in a data frame:</p>
+
+<pre><code class="r">aggregate(. ~ Species, data = iris, FUN = mean)
+</code></pre>
+
+<p>In <code>lattice</code> the bar (&#39;<code>|</code>&#39;) introduces small multiples conditioned on what follows:</p>
+
+<pre><code class="r">library(lattice)
+xyplot(Sepal.Length ~ Sepal.Width | Species, data = iris)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-6" style="background:;">
+  <hgroup>
     <h2>Everything is a function.</h2>
   </hgroup>
   <article>
@@ -202,7 +229,7 @@ str(iris)   #  Display structure of data set.
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-6" style="background:;">
+      <slide class="" id="slide-7" style="background:;">
   <hgroup>
     <h2>Everything is a function.</h2>
   </hgroup>
@@ -227,7 +254,7 @@ str(iris)   #  Display structure of data set.
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-7" style="background:;">
+      <slide class="" id="slide-8" style="background:;">
   <hgroup>
     <h2>Everything is a function.</h2>
   </hgroup>
@@ -250,7 +277,7 @@ str(iris)   #  Display structure of data set.
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-8" style="background:;">
+      <slide class="" id="slide-9" style="background:;">
   <hgroup>
     <h2>Everything is a vector.</h2>
   </hgroup>
@@ -276,7 +303,7 @@ str(iris)   #  Display structure of data set.
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-9" style="background:;">
+      <slide class="" id="slide-10" style="background:;">
   <hgroup>
     <h2><code>c()</code> is a function that combines vectors</h2>
   </hgroup>
@@ -301,7 +328,7 @@ mean(c(2, 4))   #  this passes the function one argument,
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-10" style="background:;">
+      <slide class="" id="slide-11" style="background:;">
   <hgroup>
     <h2>Everything is a vector. Vector of what?</h2>
   </hgroup>
@@ -330,7 +357,7 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-11" style="background:;">
+      <slide class="" id="slide-12" style="background:;">
   <hgroup>
     <h2>Vectorized Operations and Recycling</h2>
   </hgroup>
@@ -355,7 +382,7 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-12" style="background:;">
+      <slide class="" id="slide-13" style="background:;">
   <hgroup>
     <h2>Vectorized Operations and Recycling</h2>
   </hgroup>
@@ -375,7 +402,7 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-13" style="background:;">
+      <slide class="" id="slide-14" style="background:;">
   <hgroup>
     <h2>Vectorized Operations and Recycling</h2>
   </hgroup>
@@ -399,7 +426,7 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-14" style="background:;">
+      <slide class="" id="slide-15" style="background:;">
   <hgroup>
     <h2>Vectorized Operations and Recycling</h2>
   </hgroup>
@@ -420,7 +447,7 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-15" style="background:;">
+      <slide class="" id="slide-16" style="background:;">
   <hgroup>
     <h2>Things can have names.</h2>
   </hgroup>
@@ -444,7 +471,7 @@ my.vector
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-16" style="background:;">
+      <slide class="" id="slide-17" style="background:;">
   <hgroup>
     <h2>Selecting from vectors with <code>[ ]</code></h2>
   </hgroup>
@@ -474,7 +501,7 @@ my.vector
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-17" style="background:;">
+      <slide class="" id="slide-18" style="background:;">
   <hgroup>
     <h2>Using logical selection</h2>
   </hgroup>
@@ -491,7 +518,7 @@ my.vector
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-18" style="background:;">
+      <slide class="" id="slide-19" style="background:;">
   <hgroup>
     <h2>Using logical selection</h2>
   </hgroup>
@@ -513,7 +540,7 @@ my.vector
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-19" style="background:;">
+      <slide class="" id="slide-20" style="background:;">
   <hgroup>
     <h2>Good things to do with vectors</h2>
   </hgroup>
@@ -540,7 +567,7 @@ my.vector
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-20" style="background:;">
+      <slide class="" id="slide-21" style="background:;">
   <hgroup>
     <h2>... Data Frames!</h2>
   </hgroup>
@@ -566,7 +593,7 @@ my.vector
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-21" style="background:;">
+      <slide class="" id="slide-22" style="background:;">
   <hgroup>
     <h2>Working with data frames</h2>
   </hgroup>
@@ -595,7 +622,7 @@ with(my.data, gender)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-22" style="background:;">
+      <slide class="" id="slide-23" style="background:;">
   <hgroup>
     <h2>Working with data frames?</h2>
   </hgroup>
@@ -606,7 +633,7 @@ with(my.data, gender)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-23" style="background:;">
+      <slide class="" id="slide-24" style="background:;">
   <hgroup>
     <h2>Working with data frames!</h2>
   </hgroup>
@@ -627,7 +654,7 @@ subset(my.data, gender == &quot;F&quot;, select = &quot;time&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-24" style="background:;">
+      <slide class="" id="slide-25" style="background:;">
   <hgroup>
     <h2>Working with data frames</h2>
   </hgroup>
@@ -676,7 +703,7 @@ subset(my.data, gender == &quot;F&quot;, select = &quot;time&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-25" style="background:;">
+      <slide class="" id="slide-26" style="background:;">
   <hgroup>
     <h2>Some Statistics</h2>
   </hgroup>
@@ -699,7 +726,7 @@ aov(health1 ~ age + gender, data = my.data)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-26" style="background:;">
+      <slide class="" id="slide-27" style="background:;">
   <hgroup>
     <h2>Base graphics</h2>
   </hgroup>
@@ -723,7 +750,7 @@ plot(my.model)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-27" style="background:;">
+      <slide class="" id="slide-28" style="background:;">
   <hgroup>
     <h2>More!</h2>
   </hgroup>
@@ -739,13 +766,14 @@ library(ggplot2)             # Do this once per R session.
 <pre><code class="r">qplot(x = carat, y = price, color = cut, data = diamonds) + theme_bw()
 </code></pre>
 
-<p><img src="figure/unnamed-chunk-36.png" alt="plot of chunk unnamed-chunk-36"> </p>
+<pre><code>## Error: could not find function &quot;revalue&quot;
+</code></pre>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-28" style="background:;">
+      <slide class="" id="slide-29" style="background:;">
   <hgroup>
     <h2>The source for this presentation</h2>
   </hgroup>
@@ -756,7 +784,7 @@ library(ggplot2)             # Do this once per R session.
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-29" style="background:;">
+      <slide class="" id="slide-30" style="background:;">
   <hgroup>
     <h2>Thank you! Questions! Survey!</h2>
   </hgroup>
