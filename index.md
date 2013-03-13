@@ -61,119 +61,7 @@ github:
 *** right
 
 * Please ask questions!
-* Please fill out our [survey](http://bit.ly/NYUintroRsurvey) afterward!
-
----
-
-## Why use R?
-
-* Open Source / Free
-* Increasingly popular
-* Powerful and Extensible
-* Makes reproducible research easy, convenient and diverse visualization options, more statistics than you can shake a stick at, excellent for exploratory data analysis, many support options, often first for cutting-edge techniques, ...
-* Available:
-    * Download: [R](http://cran.r-project.org/mirrors.html) / [RStudio](http://www.rstudio.com/ide/download/)
-    * Data Services lab, fifth floor Bobst
-    * Most ITS labs
-    * Virtual Computing Lab ([VCL](https://vcl.nyu.edu/)) (for students)
-    * High Performance Computing ([HPC](https://wikis.nyu.edu/display/NYUHPC/High+Performance+Computing+at+NYU)) clusters (requires account)
-
----
-
-<center>
- <a style='border-bottom:none;' href='http://www.nytimes.com/2009/01/07/technology/business-computing/07program.html'>
-  <img src='assets/img/nytimes_article.png' height='600px' />
- </a>
-</center>
-
----
-
-<center>
- <a style='border-bottom:none;' href='http://blog.kaggle.com/2011/11/27/kagglers-favorite-tools/'>
-  <img src='assets/img/kaggler_prefs.png' height='600px' />
- </a>
-</center>
-
----
-
-<center>
- <a style='border-bottom:none;' href='http://rpubs.com/bbolker/3153'>
-  <img src='assets/img/reproducible.png' height='600px' />
- </a>
-</center>
-
----
-
-<center>
- <a style='border-bottom:none;' href='https://www.facebook.com/notes/facebook-engineering/visualizing-friendships/469716398919'>
-  <img src='assets/img/facebook_map.jpg' width='950px' />
- </a>
-</center>
-
----
-
-<center>
- <a style='border-bottom:none;' href='http://csgillespie.wordpress.com/2010/12/08/new-paper-survival-analysis/'>
-  <img src='http://csgillespie.files.wordpress.com/2010/12/gastrostomy.png' height='600px' />
- </a>
-</center>
-
----
-
-## Additional packages for R
-
-The Comprehensive R Archive Network (CRAN) hosts this many packages.
-
-This is as of `Wed Mar 13 11:57:14 2013`.
-
-
-```r
-length(unique(rownames(available.packages())))
-```
-
-```
-## Warning: unable to resolve 'lib.stat.cmu.edu'
-```
-
-```
-## Warning: unable to resolve 'lib.stat.cmu.edu'
-```
-
-```
-## Warning: unable to access index for repository
-## http://lib.stat.cmu.edu/R/CRAN/bin/macosx/leopard/contrib/2.15
-```
-
-```
-## [1] 0
-```
-
-
-And there are many more in addition to the ones on CRAN.
-
----
-
-## Why not use R?
-
-* It's not Excel.
-* It's not Mathematica/Maple/etc.
-* It's not SAS/Stata/SPSS/etc.
-* It's not C.
-* Defaults to in-memory.
-* Often not best for building interactives.
-
----
-
-## What is R?
-
-<center><img src="assets/img/what_is_R.png" height=540 /></center>
-
----
-
-## What is RStudio?
-
-An Integrated Development Environment (IDE) for R. Check it out!
-<center><img src="assets/img/RStudio.png" height=500 /></center>
+* Please fill out our [survey](http://bit.ly/NYUtopicRsurvey) afterward!
 
 ---
 
@@ -790,9 +678,7 @@ After installing and loading a package, you can use the functions it provides.
 qplot(x = carat, y = price, color = cut, data = diamonds) + theme_bw()
 ```
 
-```
-## Error: could not find function "revalue"
-```
+![plot of chunk unnamed-chunk-35](figure/unnamed-chunk-35.png) 
 
 
 ---
@@ -806,5 +692,5 @@ qplot(x = carat, y = price, color = cut, data = diamonds) + theme_bw()
 ## Thank you! Questions! Survey!
 
 <center>
-### [http://bit.ly/NYUintroRsurvey](http://bit.ly/NYUintroRsurvey)
+### [http://bit.ly/NYUtopicRsurvey](http://bit.ly/http://bit.ly/NYUtopicRsurvey)
 </center>
