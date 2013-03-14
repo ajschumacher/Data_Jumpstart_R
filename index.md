@@ -417,6 +417,13 @@ Going from long to wide is easy with the `reshape` package:
 
 ```r
 library(reshape)
+```
+
+```
+## Error: there is no package called 'reshape'
+```
+
+```r
 iris$Year <- rep(1951:2000, 3)  # Imagine longitudinal flowers. Imagine.
 head(iris)
 ```
@@ -444,13 +451,7 @@ head(molten <- melt(iris, id = c("Species", "Year")))
 ```
 
 ```
-##   Species Year     variable value
-## 1  setosa 1951 Sepal.Length   5.1
-## 2  setosa 1952 Sepal.Length   4.9
-## 3  setosa 1953 Sepal.Length   4.7
-## 4  setosa 1954 Sepal.Length   4.6
-## 5  setosa 1955 Sepal.Length     5
-## 6  setosa 1956 Sepal.Length   5.4
+## Error: could not find function "melt"
 ```
 
 
@@ -468,13 +469,7 @@ head(cast(molten))
 ```
 
 ```
-##   Species Year Sepal.Length Sepal.Width Petal.Length Petal.Width Color
-## 1  setosa 1951          5.1         3.5          1.4         0.2  pink
-## 2  setosa 1952          4.9           3          1.4         0.2  pink
-## 3  setosa 1953          4.7         3.2          1.3         0.2  pink
-## 4  setosa 1954          4.6         3.1          1.5         0.2  pink
-## 5  setosa 1955            5         3.6          1.4         0.2  pink
-## 6  setosa 1956          5.4         3.9          1.7         0.4  pink
+## Error: could not find function "cast"
 ```
 
 
@@ -486,8 +481,8 @@ Suppose we want to abbreviate the species names:
 
 
 ```r
-iris$Species <- substr(iris$Species, 1, 4)  #  'sub-string'
-table(iris$Species)
+iris$Species_short <- substr(iris$Species, 1, 4)  #  'sub-string'
+table(iris$Species_short)
 ```
 
 ```
@@ -698,162 +693,49 @@ xyplot(Sepal.Length ~ Sepal.Width,
 ```
 
 
-More `lattice` functions: `histogram`, `bwplot`, `splom`, `barchart`. To do multiple plots at once, usually you want a `|` conditional in your plotting formula.
+More `lattice` functions: `histogram`, `bwplot`, `splom`, `barchart`. To do multiple plots at once, usually you want a `|` conditional in your plotting formula to get small multiples.
 
 ---
 
-## Working with data frames?
+## 2-D plotting: `ggplot2`
 
-How can we select the `time`s for females?
+Loading the `ggplot2` package, you can make graphics like this. Syntax is quite different from base graphics and `lattice`. It's based on [The Grammar of Graphics](http://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448).
+
+
+```r
+g <- ggplot(data = iris, aes(x = Sepal.Width,
+                             y = Sepal.Length,
+                             colour = Species))
+g <- g + geom_point()  # Many more; see http://docs.ggplot2.org/current/index.html
+g <- g + theme_bw()    # I happen to prefer this theme.
+g <- g + labs(title = "Sepal Measurements for 150 Irises")
+g <- g + scale_x_continuous(name = "Sepal Width, centimeters",
+                            limits = c(1, 6))
+g <- g + scale_y_continuous(name = "Sepal Length, centimeters",
+                            limits = c(4, 9))
+g <- g + scale_color_manual(values = colors$Color)
+g <- g + theme(legend.position=c(0.8, 0.8))
+g
+```
+
+
+The `qplot` function is also available for quick plots using syntax more similar to base graphics.
 
 ---
 
-## Working with data frames!
+## Network (graph) visualization
 
-How can we select the `time`s for females?
+This is popular lately. I describe it on my [blog](http://planspace.org/2013/01/30/visualize-co_occurrence/).
 
-
-```r
-my.data[my.data$gender == "F", "time"]
-```
-
-
-Other options:
-
-
-```r
-my.data$time[my.data$gender == "F"]
-
-subset(my.data, gender == "F", select = "time")
-```
-
+<iframe src="network_graph.txt" /></iframe>
 
 ---
 
-## Working with data frames
+## PCA / clustering / 3-D plotting
 
-To add / compute / make a new column, just assign to it:
+This is also fun and described on my [blog](http://planspace.org/2013/02/03/pca-3d-visualization-and-clustering-in-r/).
 
-
-```r
-my.data$number.five <- 5
-```
-
-```
-## Error: object 'my.data' not found
-```
-
-```r
-my.data$mean.1.2 <- my.data$health1 + my.data$health2
-```
-
-```
-## Error: object 'my.data' not found
-```
-
-```r
-my.data$health <- rowMeans(my.data[5:10])
-```
-
-```
-## Error: object 'my.data' not found
-```
-
-
-To drop / delete / remove a column, you have options:
-
-
-```r
-my.data$number.five <- NULL         #  remove from the data frame 'in place'
-```
-
-```
-## Error: object 'my.data' not found
-```
-
-```r
-my.new.data <- my.data[1:10]        #  make a new smaller data frame
-```
-
-```
-## Error: object 'my.data' not found
-```
-
-```r
-my.new.data <- my.data[-c(11,12)]   #  same as last
-```
-
-```
-## Error: object 'my.data' not found
-```
-
-
----
-
-## Some Statistics
-
-
-```r
-mean(my.data$age)
-sd(my.data$age)
-cor(my.data[5:10])
-table(my.data$gender)
-table(my.data$health3, my.data$gender)
-chisq.test(my.data$health3, my.data$gender)
-with(my.data, t.test(health1, health2))
-my.model <- lm(health1 ~ age + gender, data = my.data)
-summary(my.model)
-confint(my.model)
-aov(my.model)
-aov(health1 ~ age + gender, data = my.data)
-```
-
-
----
-
-## Base graphics
-
-
-```r
-with(my.data, barplot(table(gender)))
-plot(my.data$age)
-hist(my.data$age)
-hist(my.data$age, col = "cornflowerblue", breaks = 20, xlab = "Age", main = "Participants")
-boxplot(my.data$age)
-with(my.data, boxplot(age ~ gender))
-with(my.data, plot(health1, health2))
-with(my.data, plot(health1, health2, pch = 19))
-with(my.data, plot(jitter(health1), jitter(health2)))
-with(my.data, plot(jitter(health1), jitter(health2), pch = 20, col = rainbow(15), 
-    xlab = "Monkeys eaten", ylab = "Number of cheeses", main = "Absolute Power (Ninjas)"))
-pairs(my.data[5:10])
-plot(my.model)
-```
-
-
----
-
-## More!
-
-There are many packages available on the Comprehensive R Archive Network ([CRAN](http://cran.r-project.org/)) which can be easily installed and loaded into R. One very popular package is `ggplot2`, a graphing library.
-
-
-```r
-install.packages('ggplot2')  # Do this once per machine.
-library(ggplot2)             # Do this once per R session.
-```
-
-
-After installing and loading a package, you can use the functions it provides.
-
-
-```r
-qplot(x = carat, y = price, color = cut, data = diamonds) + theme_bw()
-```
-
-```
-## Error: could not find function "qplot"
-```
+<iframe src="pca_cluster_3d.txt" /></iframe>
 
 
 ---

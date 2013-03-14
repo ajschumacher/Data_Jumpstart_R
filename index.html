@@ -469,7 +469,12 @@ iris[sample(nrow(iris), 6),]
     <p>Going from long to wide is easy with the <code>reshape</code> package:</p>
 
 <pre><code class="r">library(reshape)
-iris$Year &lt;- rep(1951:2000, 3)  # Imagine longitudinal flowers. Imagine.
+</code></pre>
+
+<pre><code>## Error: there is no package called &#39;reshape&#39;
+</code></pre>
+
+<pre><code class="r">iris$Year &lt;- rep(1951:2000, 3)  # Imagine longitudinal flowers. Imagine.
 head(iris)
 </code></pre>
 
@@ -496,13 +501,7 @@ head(iris)
 <pre><code class="r">head(molten &lt;- melt(iris, id = c(&quot;Species&quot;, &quot;Year&quot;)))
 </code></pre>
 
-<pre><code>##   Species Year     variable value
-## 1  setosa 1951 Sepal.Length   5.1
-## 2  setosa 1952 Sepal.Length   4.9
-## 3  setosa 1953 Sepal.Length   4.7
-## 4  setosa 1954 Sepal.Length   4.6
-## 5  setosa 1955 Sepal.Length     5
-## 6  setosa 1956 Sepal.Length   5.4
+<pre><code>## Error: could not find function &quot;melt&quot;
 </code></pre>
 
 <p>The column names <code>variable</code> and <code>value</code> are just defaults.</p>
@@ -521,13 +520,7 @@ head(iris)
 <pre><code class="r">head(cast(molten))
 </code></pre>
 
-<pre><code>##   Species Year Sepal.Length Sepal.Width Petal.Length Petal.Width Color
-## 1  setosa 1951          5.1         3.5          1.4         0.2  pink
-## 2  setosa 1952          4.9           3          1.4         0.2  pink
-## 3  setosa 1953          4.7         3.2          1.3         0.2  pink
-## 4  setosa 1954          4.6         3.1          1.5         0.2  pink
-## 5  setosa 1955            5         3.6          1.4         0.2  pink
-## 6  setosa 1956          5.4         3.9          1.7         0.4  pink
+<pre><code>## Error: could not find function &quot;cast&quot;
 </code></pre>
 
   </article>
@@ -541,8 +534,8 @@ head(iris)
   <article>
     <p>Suppose we want to abbreviate the species names:</p>
 
-<pre><code class="r">iris$Species &lt;- substr(iris$Species, 1, 4)  #  &#39;sub-string&#39;
-table(iris$Species)
+<pre><code class="r">iris$Species_short &lt;- substr(iris$Species, 1, 4)  #  &#39;sub-string&#39;
+table(iris$Species_short)
 </code></pre>
 
 <pre><code>## 
@@ -759,7 +752,7 @@ legend(&quot;topright&quot;, legend = colors$Species, col = colors$Color, pch = 
        auto.key = list(corner=c(1, 1)))
 </code></pre>
 
-<p>More <code>lattice</code> functions: <code>histogram</code>, <code>bwplot</code>, <code>splom</code>, <code>barchart</code>. To do multiple plots at once, usually you want a <code>|</code> conditional in your plotting formula.</p>
+<p>More <code>lattice</code> functions: <code>histogram</code>, <code>bwplot</code>, <code>splom</code>, <code>barchart</code>. To do multiple plots at once, usually you want a <code>|</code> conditional in your plotting formula to get small multiples.</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -767,10 +760,27 @@ legend(&quot;topright&quot;, legend = colors$Species, col = colors$Color, pch = 
 
       <slide class="" id="slide-29" style="background:;">
   <hgroup>
-    <h2>Working with data frames?</h2>
+    <h2>2-D plotting: <code>ggplot2</code></h2>
   </hgroup>
   <article>
-    <p>How can we select the <code>time</code>s for females?</p>
+    <p>Loading the <code>ggplot2</code> package, you can make graphics like this. Syntax is quite different from base graphics and <code>lattice</code>. It&#39;s based on <a href="http://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448">The Grammar of Graphics</a>.</p>
+
+<pre><code class="r">g &lt;- ggplot(data = iris, aes(x = Sepal.Width,
+                             y = Sepal.Length,
+                             colour = Species))
+g &lt;- g + geom_point()  # Many more; see http://docs.ggplot2.org/current/index.html
+g &lt;- g + theme_bw()    # I happen to prefer this theme.
+g &lt;- g + labs(title = &quot;Sepal Measurements for 150 Irises&quot;)
+g &lt;- g + scale_x_continuous(name = &quot;Sepal Width, centimeters&quot;,
+                            limits = c(1, 6))
+g &lt;- g + scale_y_continuous(name = &quot;Sepal Length, centimeters&quot;,
+                            limits = c(4, 9))
+g &lt;- g + scale_color_manual(values = colors$Color)
+g &lt;- g + theme(legend.position=c(0.8, 0.8))
+g
+</code></pre>
+
+<p>The <code>qplot</code> function is also available for quick plots using syntax more similar to base graphics.</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -778,20 +788,12 @@ legend(&quot;topright&quot;, legend = colors$Species, col = colors$Color, pch = 
 
       <slide class="" id="slide-30" style="background:;">
   <hgroup>
-    <h2>Working with data frames!</h2>
+    <h2>Network (graph) visualization</h2>
   </hgroup>
   <article>
-    <p>How can we select the <code>time</code>s for females?</p>
+    <p>This is popular lately. I describe it on my <a href="http://planspace.org/2013/01/30/visualize-co_occurrence/">blog</a>.</p>
 
-<pre><code class="r">my.data[my.data$gender == &quot;F&quot;, &quot;time&quot;]
-</code></pre>
-
-<p>Other options:</p>
-
-<pre><code class="r">my.data$time[my.data$gender == &quot;F&quot;]
-
-subset(my.data, gender == &quot;F&quot;, select = &quot;time&quot;)
-</code></pre>
+<iframe src="network_graph.txt" /></iframe>
 
   </article>
   <!-- Presenter Notes -->
@@ -799,124 +801,18 @@ subset(my.data, gender == &quot;F&quot;, select = &quot;time&quot;)
 
       <slide class="" id="slide-31" style="background:;">
   <hgroup>
-    <h2>Working with data frames</h2>
+    <h2>PCA / clustering / 3-D plotting</h2>
   </hgroup>
   <article>
-    <p>To add / compute / make a new column, just assign to it:</p>
+    <p>This is also fun and described on my <a href="http://planspace.org/2013/02/03/pca-3d-visualization-and-clustering-in-r/">blog</a>.</p>
 
-<pre><code class="r">my.data$number.five &lt;- 5
-</code></pre>
-
-<pre><code>## Error: object &#39;my.data&#39; not found
-</code></pre>
-
-<pre><code class="r">my.data$mean.1.2 &lt;- my.data$health1 + my.data$health2
-</code></pre>
-
-<pre><code>## Error: object &#39;my.data&#39; not found
-</code></pre>
-
-<pre><code class="r">my.data$health &lt;- rowMeans(my.data[5:10])
-</code></pre>
-
-<pre><code>## Error: object &#39;my.data&#39; not found
-</code></pre>
-
-<p>To drop / delete / remove a column, you have options:</p>
-
-<pre><code class="r">my.data$number.five &lt;- NULL         #  remove from the data frame &#39;in place&#39;
-</code></pre>
-
-<pre><code>## Error: object &#39;my.data&#39; not found
-</code></pre>
-
-<pre><code class="r">my.new.data &lt;- my.data[1:10]        #  make a new smaller data frame
-</code></pre>
-
-<pre><code>## Error: object &#39;my.data&#39; not found
-</code></pre>
-
-<pre><code class="r">my.new.data &lt;- my.data[-c(11,12)]   #  same as last
-</code></pre>
-
-<pre><code>## Error: object &#39;my.data&#39; not found
-</code></pre>
+<iframe src="pca_cluster_3d.txt" /></iframe>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
       <slide class="" id="slide-32" style="background:;">
-  <hgroup>
-    <h2>Some Statistics</h2>
-  </hgroup>
-  <article>
-    <pre><code class="r">mean(my.data$age)
-sd(my.data$age)
-cor(my.data[5:10])
-table(my.data$gender)
-table(my.data$health3, my.data$gender)
-chisq.test(my.data$health3, my.data$gender)
-with(my.data, t.test(health1, health2))
-my.model &lt;- lm(health1 ~ age + gender, data = my.data)
-summary(my.model)
-confint(my.model)
-aov(my.model)
-aov(health1 ~ age + gender, data = my.data)
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-      <slide class="" id="slide-33" style="background:;">
-  <hgroup>
-    <h2>Base graphics</h2>
-  </hgroup>
-  <article>
-    <pre><code class="r">with(my.data, barplot(table(gender)))
-plot(my.data$age)
-hist(my.data$age)
-hist(my.data$age, col = &quot;cornflowerblue&quot;, breaks = 20, xlab = &quot;Age&quot;, main = &quot;Participants&quot;)
-boxplot(my.data$age)
-with(my.data, boxplot(age ~ gender))
-with(my.data, plot(health1, health2))
-with(my.data, plot(health1, health2, pch = 19))
-with(my.data, plot(jitter(health1), jitter(health2)))
-with(my.data, plot(jitter(health1), jitter(health2), pch = 20, col = rainbow(15), 
-    xlab = &quot;Monkeys eaten&quot;, ylab = &quot;Number of cheeses&quot;, main = &quot;Absolute Power (Ninjas)&quot;))
-pairs(my.data[5:10])
-plot(my.model)
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-      <slide class="" id="slide-34" style="background:;">
-  <hgroup>
-    <h2>More!</h2>
-  </hgroup>
-  <article>
-    <p>There are many packages available on the Comprehensive R Archive Network (<a href="http://cran.r-project.org/">CRAN</a>) which can be easily installed and loaded into R. One very popular package is <code>ggplot2</code>, a graphing library.</p>
-
-<pre><code class="r">install.packages(&#39;ggplot2&#39;)  # Do this once per machine.
-library(ggplot2)             # Do this once per R session.
-</code></pre>
-
-<p>After installing and loading a package, you can use the functions it provides.</p>
-
-<pre><code class="r">qplot(x = carat, y = price, color = cut, data = diamonds) + theme_bw()
-</code></pre>
-
-<pre><code>## Error: could not find function &quot;qplot&quot;
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-      <slide class="" id="slide-35" style="background:;">
   <hgroup>
     <h2>Thank you! Questions! Survey!</h2>
   </hgroup>

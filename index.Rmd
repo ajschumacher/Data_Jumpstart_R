@@ -20,6 +20,7 @@ github:
 ```{r setup, echo=FALSE}
 set.seed(42)
 options(stringsAsFactors = FALSE)
+library(ggplot2)
 ```
 
 ## [NYU Data Services](http://bit.ly/nyudataservices)
@@ -345,8 +346,8 @@ head(cast(molten))
 Suppose we want to abbreviate the species names:
 
 ```{r}
-iris$Species <- substr(iris$Species, 1, 4)  #  'sub-string'
-table(iris$Species)
+iris$Species_short <- substr(iris$Species, 1, 4)  #  'sub-string'
+table(iris$Species_short)
 ```
 
 Also sometimes useful: `toupper`, `tolower`, `strsplit`.
@@ -496,106 +497,48 @@ xyplot(Sepal.Length ~ Sepal.Width,
        auto.key = list(corner=c(1, 1)))
 ```
 
-More `lattice` functions: `histogram`, `bwplot`, `splom`, `barchart`. To do multiple plots at once, usually you want a `|` conditional in your plotting formula.
+More `lattice` functions: `histogram`, `bwplot`, `splom`, `barchart`. To do multiple plots at once, usually you want a `|` conditional in your plotting formula to get small multiples.
 
 ---
 
-## Working with data frames?
+## 2-D plotting: `ggplot2`
 
-How can we select the `time`s for females?
-
----
-
-## Working with data frames!
-
-How can we select the `time`s for females?
-
-```{r, eval=FALSE}
-my.data[my.data$gender=='F', "time"]
-```
-
-Other options:
-
-```{r, eval=FALSE}
-my.data$time[my.data$gender=='F']
-
-subset(my.data, gender=='F', select="time")
-```
-
----
-
-## Working with data frames
-
-To add / compute / make a new column, just assign to it:
-
-```{r}
-my.data$number.five <- 5
-my.data$mean.1.2 <- my.data$health1 + my.data$health2
-my.data$health <- rowMeans(my.data[5:10])
-```
-
-To drop / delete / remove a column, you have options:
-
-```{r, tidy=FALSE}
-my.data$number.five <- NULL         #  remove from the data frame 'in place'
-my.new.data <- my.data[1:10]        #  make a new smaller data frame
-my.new.data <- my.data[-c(11,12)]   #  same as last
-```
-
----
-
-## Some Statistics
-
-```{r, eval=FALSE}
-mean(my.data$age)
-sd(my.data$age)
-cor(my.data[5:10])
-table(my.data$gender)
-table(my.data$health3, my.data$gender)
-chisq.test(my.data$health3, my.data$gender)
-with(my.data, t.test(health1, health2))
-my.model <- lm(health1 ~ age + gender, data=my.data)
-summary(my.model)
-confint(my.model)
-aov(my.model)
-aov(health1 ~ age + gender, data=my.data)
-```
-
----
-
-## Base graphics
-
-```{r, eval=FALSE}
-with(my.data, barplot(table(gender)))
-plot(my.data$age)
-hist(my.data$age)
-hist(my.data$age, col='cornflowerblue', breaks=20, xlab='Age', main='Participants')
-boxplot(my.data$age)
-with(my.data, boxplot(age ~ gender))
-with(my.data, plot(health1, health2))
-with(my.data, plot(health1, health2, pch=19))
-with(my.data, plot(jitter(health1), jitter(health2)))
-with(my.data, plot(jitter(health1), jitter(health2), pch=20, col=rainbow(15), xlab='Monkeys eaten', ylab='Number of cheeses', main='Absolute Power (Ninjas)'))
-pairs(my.data[5:10])
-plot(my.model)
-```
-
----
-
-## More!
-
-There are many packages available on the Comprehensive R Archive Network ([CRAN](http://cran.r-project.org/)) which can be easily installed and loaded into R. One very popular package is `ggplot2`, a graphing library.
+Loading the `ggplot2` package, you can make graphics like this. Syntax is quite different from base graphics and `lattice`. It's based on [The Grammar of Graphics](http://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448).
 
 ```{r, eval=FALSE, tidy=FALSE}
-install.packages('ggplot2')  # Do this once per machine.
-library(ggplot2)             # Do this once per R session.
+g <- ggplot(data = iris, aes(x = Sepal.Width,
+                             y = Sepal.Length,
+                             colour = Species))
+g <- g + geom_point()  # Many more; see http://docs.ggplot2.org/current/index.html
+g <- g + theme_bw()    # I happen to prefer this theme.
+g <- g + labs(title = "Sepal Measurements for 150 Irises")
+g <- g + scale_x_continuous(name = "Sepal Width, centimeters",
+                            limits = c(1, 6))
+g <- g + scale_y_continuous(name = "Sepal Length, centimeters",
+                            limits = c(4, 9))
+g <- g + scale_color_manual(values = colors$Color)
+g <- g + theme(legend.position=c(0.8, 0.8))
+g
 ```
 
-After installing and loading a package, you can use the functions it provides.
+The `qplot` function is also available for quick plots using syntax more similar to base graphics.
 
-```{r, fig.align='center', fig.height=2.6, fig.width=5}
-qplot(x=carat, y=price, color=cut, data=diamonds) + theme_bw()
-```
+---
+
+## Network (graph) visualization
+
+This is popular lately. I describe it on my [blog](http://planspace.org/2013/01/30/visualize-co_occurrence/).
+
+<iframe src="network_graph.txt" /></iframe>
+
+---
+
+## PCA / clustering / 3-D plotting
+
+This is also fun and described on my [blog](http://planspace.org/2013/02/03/pca-3d-visualization-and-clustering-in-r/).
+
+<iframe src="pca_cluster_3d.txt" /></iframe>
+
 
 ---
 
