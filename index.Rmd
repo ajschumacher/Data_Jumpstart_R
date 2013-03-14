@@ -23,6 +23,15 @@ options(stringsAsFactors = FALSE)
 library(ggplot2)
 ```
 
+```{r package_installs, eval=FALSE, echo=FALSE}
+install.packages(c("lattice",
+                   "ggplot2",
+                   "reshape",
+                   "rgl",
+                   "igraph",
+                   "sqldf"))
+```
+
 ## [NYU Data Services](http://bit.ly/nyudataservices)
 
 *** left
