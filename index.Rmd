@@ -57,8 +57,7 @@ options(repos='http://lib.stat.cmu.edu/R/CRAN/')
 * Programming: functions
 * Programming: flow control (if, for, while, ...)
 * Data set manipulation (merge, wide/long, ...)
-* String manipulation (substr, grep, sub, ...)
-* Class manipulation (factor, string, date, ...)
+* Munging strings, dates, etc.
 * SQL in R (SELECT * FROM ...)
 * 2-D plotting (base, lattice, ggplot2, ...)
 * Network (graph) visualization
@@ -106,7 +105,7 @@ boxplot(Sepal.Length ~ Species, data=iris)
 
 ## Formulas in R
 
-Model based on a categorical variable, an interaction, the log of a variable, and zero intercept:
+This model is based on a categorical variable, an interaction, the log of a variable, and zero intercept:
 
 ```{r, eval=FALSE, tidy=FALSE}
 lm(Sepal.Length ~ Species + Species:Petal.Length + log(Petal.Width) - 1, data=iris)
@@ -128,211 +127,286 @@ xyplot(Sepal.Length ~ Sepal.Width | Species, data=iris)
 
 ---
 
-## Everything is a function.
+## Working with (model) objects
 
-Even things that don't look like functions are functions.
+R functions often return some sort of 'results object' which you can continue to work with.
 
-```{r, tidy=FALSE}
-5 + 7
-"+"(5,7)
-```
-
-Arithmetic operations are functions.
-
----
-
-## Everything is a function.
-
-Even things that don't look like functions are functions.
-
-```{r, tidy=FALSE}
-":"(1,10)
-1:10
-```
-
-This is a super handy function! It returns a vector.
-
----
-
-## Everything is a function.
-
-Convenient short-hand is available for other functions too. Get help fast:
-
-```{r, tidy=FALSE, eval=FALSE}
-?glm             #  This is identical to: help(glm)
-```
-
-And of course, assign things to variables:
-
-```{r, tidy=FALSE, eval=FALSE}
-my.object <- 8   #  You will never see the equivalent: "<-"(my.object, 8)
-
-
-
-# Okay, comments aren't functions.
-```
-
----
-
-## Everything is a vector.
+This is the case for model objects:
 
 ```{r}
-42:100
+my.model <- lm(Sepal.Length ~ .*., data=iris)  # Create an abominable model.
 ```
 
-The numbers in brackets tell you the position in the vector at the start of the line. So:
+The model object contains lots of things, which you can look at this way but likely won't:
 
-```{r}
-42
+```{r, eval=FALSE}
+str(my.model) # View the complete structure of the model object.
 ```
+
+(`str`, like many R functions, is generic - it works on many types of objects.)
 
 ---
 
-## `c()` is a function that combines vectors
+## Working with (model) objects
+
+Often instead of doing things like this:
+
+```{r, eval=FALSE}
+cor(my.model$fitted.values, my.model$model$Sepal.Length)^2
+```
+
+You can use generic functions like these:
 
 ```{r, eval=FALSE, tidy=FALSE}
-2, 4      #  this will fail
-
-c(2, 4)   #  this will make a vector containing first 2 then 4
+my.model  #  This is equivalent to print(my.model)
+summary(my.model)
+deviance(my.model)
+residuals(my.model)
+plot(my.model)
+coef(my.model)
+confint(my.model)
+vcov(my.model)
+predict(my.model,
+        data.frame(Sepal.Width=10, Petal.Length=10, Petal.Width=10, Species='setosa'))
 ```
-
-Very often you will want to pass one vector as an argument to a function.
-
-```{r, tidy=FALSE, eval=FALSE}
-mean(2, 4)      #  this passes the function two arguments,
-                #   a vector containing 2 and a vector containing 4
-
-mean(c(2, 4))   #  this passes the function one argument,
-                #   a vector containing first 2 then 4
-```
-
-This kind of thing is common in R and an easy way to make a mistake.
 
 ---
 
-## Everything is a vector. Vector of what?
+## Programming: functions
 
-```{r, eval=FALSE}
-class(TRUE); class(T); class(FALSE); class(F);              #  logical
-class(1:10); class(42L);                                    #  integer
-class(42); class(3.7); class(5e7); class(1/89)              #  numeric
-class("Aaron"); class("cow"); class("123"); class("TRUE")   #  character
+Functions are objects. You can make your own like this:
 
-# And then there are these guys...
-class(factor(c("red", "green", "blue")))                    #  factor
-class(factor(c("medium", "small", "small", "large"),
-             levels=c("small", "medium", "large"),
-             ordered=TRUE))                                 #  ordered factor
+```{r}
+times.four <- function(formal.argument) {
+  four <- 4
+  return(formal.argument*four)
+}
+
+times.four(7)
+print(four)   #  Only exists inside the function.
 ```
 
-Vectors have exactly one class, and are joined by the `c()` function.
+---
 
-```{r, eval=FALSE}
-c(9, 7, TRUE, FALSE)
-c(9, 7, TRUE, FALSE, "cow")
+## Programming: functions
+
+Anonymous functions are also frequently useful. Compare these:
+
+```{r, tidy=FALSE}
+aggregate(. ~ Species, data=iris, FUN=max)
+aggregate(. ~ Species, data=iris, FUN=function(x) { return(max(x) - 1) } )
+```
+
+---
+
+## Programming: flow control
+
+The first rule of for loops is you do not write explicit for loops.
+
+```{r}
+x = 0
+for (i in 1:length(iris$Sepal.Length)) {
+  x <- x + iris$Sepal.Length[i]
+}
+x
+```
+
+The above works, but as is often the case it is better to do it the R way:
+
+```{r}
+(x <- sum(iris$Sepal.Length))
 ```
 
 Other things: `NA` (missing), `NULL` (not a thing), `NaN` (`sqrt(-1)`), `Inf` (`1/0`).
 
 ---
 
-## Vectorized Operations and Recycling
+## Programming: flow control
 
-Most operations happen element-wise.
+The second rule of for loops is you DO NOT write explicit for loops.
 
-```{r}
-c(1, 2, 3, 4) + c(100, 1000, 10000, 10000)
+```{r, eval=FALSE}
+iris$Sepal.Long <- NA
+for (i in 1:length(iris$Sepal.Length)) {
+  if (iris$Sepal.Length[i] > mean(iris$Sepal.Length)) {
+    iris$Sepal.Long[i] <- 'yes'
+  } else {
+    iris$Sepal.Long[i] <- 'no'
+  }
+}
 ```
 
-If the vectors have different lengths, they shorter one gets 'recycled'.
-
-```{r}
-c(1, 2, 3, 4) + c(100, 1000)
-```
-
----
-
-## Vectorized Operations and Recycling
-
-What will happen with these?
+Seriously, avoid that. There are vectorized ways to do many things:
 
 ```{r, eval=FALSE, tidy=FALSE}
-c(1, 2) * c(4, 5, 6)
-
-1 + 1:10
-
-1:10 / 10
-
-1:10 < 5
+iris$Sepal.Long <- ifelse(iris$Sepal.Length > mean(iris$Sepal.Length),
+                          'yes', 'no')
 ```
 
 ---
 
-## Vectorized Operations and Recycling
+## Programming: flow control
+
+Of course there are cases where you will want to use flow control, and you can use it:
+
+```{r, eval=FALSE, tidy=FALSE}
+for (i in 1:10) { print(i) }
+i=0; while (i < 10) { i <- i + 1; print(i) }
+i=0; repeat { i <- i + 1; print(i); if (i == 10) { break }} # `next` is also available
+# There is also a `switch` statment.
+```
+
+Be careful with if/else constructs especially if  you might have missing values. What happens here?
+
+```{r, eval=FALSE}
+i <- NA
+if (i > 3) {
+  print('Big!')
+} else if (i < 3) {
+  print('Small!')
+} else {
+  print('Three!')
+}
+```
+
+---
+
+## Data set manipulation
+
+Bind columns with `cbind`:
 
 ```{r, eval=TRUE, tidy=FALSE}
-c(1, 2) * c(4, 5, 6)
-1 + 1:10
+colors <- cbind(data.frame(Species=c('setosa', 'versicolor')),
+                data.frame(Color=c('pink', 'orange')))
 ```
 
----
-
-## Vectorized Operations and Recycling
+Bind rows with `rbind`:
 
 ```{r, eval=TRUE, tidy=FALSE}
-1:10 / 10
-1:10 < 5
+colors <- rbind(colors,
+                data.frame(Species='virginica', Color='white'))
+colors
 ```
 
 ---
 
-## Things can have names.
+## Data set manipulation
+
+Merging with `merge` is easy and fun. It merges on common column names and does a natural (inner) join by default. See `?merge` for all the details.
+
+```{r, eval=TRUE, tidy=FALSE}
+iris <- merge(iris, colors)
+iris[sample(nrow(iris), 6),]
+```
+
+---
+
+## Data set manipulation
+
+Going from long to wide is easy with the `reshape` package:
+
+```{r, message=FALSE}
+library(reshape)
+iris$Year <- rep(1951:2000, 3)  # Imagine longitudinal flowers. Imagine.
+head(iris)
+```
+
+---
+
+## Data set manipulation
+
+Going from wide to long with `melt`:
 
 ```{r}
-my.vector <- 1:5
-my.vector
-names(my.vector) <- c('a', 'b', 'c', 'd', 'e')  # don't be scared!
-my.vector
+head(molten <- melt(iris, id=c('Species', 'Year')))
 ```
+
+The column names `variable` and `value` are just defaults.
 
 ---
 
-## Selecting from vectors with `[ ]`
+## Data set manipulation
 
-```{r, tidy=FALSE}
-my.vector[c(2, 4)]                             # by index numbers
-my.vector[c('c', 'e')]                         # by names
-my.vector[c(TRUE, FALSE, TRUE, FALSE, TRUE)]   # with logicals
-```
-
----
-
-## Using logical selection
+Going from long to wide with `cast`:
 
 ```{r}
-(my.numbers <- sample(1:10, 20, replace=TRUE))
+head(cast(molten))
 ```
-
-How can we get just the entries less than five?
 
 ---
 
-## Using logical selection
+## Munging strings, dates, etc.
+
+Suppose we want to abbreviate the species names:
 
 ```{r}
-my.numbers < 5
-my.numbers[my.numbers < 5]
+iris$Species <- substr(iris$Species, 1, 4)  #  'sub-string'
+table(iris$Species)
+```
+
+Also sometimes useful: `toupper`, `tolower`, `strsplit`.
+
+---
+
+## Munging strings, dates, etc.
+
+Or remove vowels from the color names:
+
+```{r}
+iris$Color <- gsub('[aeiou]', '', iris$Color)  # more commonly used for white-space removal
+table(iris$Color)
+```
+
+There is solid support for regular expressions and of course `grep`. See `?regex` and `?grep`.
+
+```{r}
+grep('Length', names(iris), value=TRUE)
 ```
 
 ---
 
-## Good things to do with vectors
+## Munging strings, dates, etc.
 
-```{r, tidy=FALSE}
-length(my.vector)   #  How long is my vector?
-sum(my.vector)      #  What if I add up the numbers in my vector?
-sum(my.vector < 4)  #  Alternative: length(my.vector[my.vector < 4])
+Right now `Year` is an integer.
+
+```{r}
+str(iris$Year)
 ```
+
+Let's change it into a date. First, we make it into a character string.
+
+```{r}
+iris$Date <- as.character(iris$Year)
+str(iris$Date)
+```
+
+---
+
+## Munging strings, dates, etc.
+
+Now we can make it into a date.
+
+```{r}
+head(as.Date(iris$Date, format="%Y"))
+```
+
+By default it takes today's day and month. (For `format` details see `?strptime`.) Let's specify January 1st, by using `paste` to stick strings together.
+
+```{r}
+head(paste(iris$Date, '01', '01', sep='-'))
+```
+
+---
+## Munging strings, dates, etc.
+
+Finally, we can make real dates:
+
+```{r}
+iris$Date <- as.Date(paste(iris$Date, '01', '01', sep='-'))
+class(iris$Date)
+```
+
+This will plot more nicely later on. Dates can be a big pain. See also the package `lubridate` if you have to deal with them a lot.
 
 ---
 

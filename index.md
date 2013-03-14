@@ -54,8 +54,7 @@ github:
 * Programming: functions
 * Programming: flow control (if, for, while, ...)
 * Data set manipulation (merge, wide/long, ...)
-* String manipulation (substr, grep, sub, ...)
-* Class manipulation (factor, string, date, ...)
+* Munging strings, dates, etc.
 * SQL in R (SELECT * FROM ...)
 * 2-D plotting (base, lattice, ggplot2, ...)
 * Network (graph) visualization
@@ -120,7 +119,7 @@ boxplot(Sepal.Length ~ Species, data = iris)
 
 ## Formulas in R
 
-Model based on a categorical variable, an interaction, the log of a variable, and zero intercept:
+This model is based on a categorical variable, an interaction, the log of a variable, and zero intercept:
 
 
 ```r
@@ -148,160 +147,145 @@ xyplot(Sepal.Length ~ Sepal.Width | Species, data = iris)
 
 ---
 
-## Everything is a function.
+## Working with (model) objects
 
-Even things that don't look like functions are functions.
+R functions often return some sort of 'results object' which you can continue to work with.
+
+This is the case for model objects:
 
 
 ```r
-5 + 7
+my.model <- lm(Sepal.Length ~ . * ., data = iris)  # Create an abominable model.
 ```
 
-```
-## [1] 12
-```
+
+The model object contains lots of things, which you can look at this way but likely won't:
+
 
 ```r
-"+"(5,7)
-```
-
-```
-## [1] 12
+str(my.model)  # View the complete structure of the model object.
 ```
 
 
-Arithmetic operations are functions.
+(`str`, like many R functions, is generic - it works on many types of objects.)
 
 ---
 
-## Everything is a function.
+## Working with (model) objects
 
-Even things that don't look like functions are functions.
-
-
-```r
-":"(1,10)
-```
-
-```
-##  [1]  1  2  3  4  5  6  7  8  9 10
-```
-
-```r
-1:10
-```
-
-```
-##  [1]  1  2  3  4  5  6  7  8  9 10
-```
-
-
-This is a super handy function! It returns a vector.
-
----
-
-## Everything is a function.
-
-Convenient short-hand is available for other functions too. Get help fast:
+Often instead of doing things like this:
 
 
 ```r
-?glm             #  This is identical to: help(glm)
+cor(my.model$fitted.values, my.model$model$Sepal.Length)^2
 ```
 
 
-And of course, assign things to variables:
+You can use generic functions like these:
 
 
 ```r
-my.object <- 8   #  You will never see the equivalent: "<-"(my.object, 8)
-
-
-
-# Okay, comments aren't functions.
+my.model  #  This is equivalent to print(my.model)
+summary(my.model)
+deviance(my.model)
+residuals(my.model)
+plot(my.model)
+coef(my.model)
+confint(my.model)
+vcov(my.model)
+predict(my.model,
+        data.frame(Sepal.Width=10, Petal.Length=10, Petal.Width=10, Species='setosa'))
 ```
 
 
 ---
 
-## Everything is a vector.
+## Programming: functions
+
+Functions are objects. You can make your own like this:
 
 
 ```r
-42:100
+times.four <- function(formal.argument) {
+    four <- 4
+    return(formal.argument * four)
+}
+
+times.four(7)
 ```
 
 ```
-##  [1]  42  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58
-## [18]  59  60  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75
-## [35]  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90  91  92
-## [52]  93  94  95  96  97  98  99 100
+## [1] 28
 ```
-
-
-The numbers in brackets tell you the position in the vector at the start of the line. So:
-
 
 ```r
-42
+print(four)  #  Only exists inside the function.
 ```
 
 ```
-## [1] 42
+## Error: object 'four' not found
 ```
 
 
 ---
 
-## `c()` is a function that combines vectors
+## Programming: functions
+
+Anonymous functions are also frequently useful. Compare these:
 
 
 ```r
-2, 4      #  this will fail
-
-c(2, 4)   #  this will make a vector containing first 2 then 4
+aggregate(. ~ Species, data=iris, FUN=max)
 ```
 
-
-Very often you will want to pass one vector as an argument to a function.
-
+```
+##      Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1     setosa          5.8         4.4          1.9         0.6
+## 2 versicolor          7.0         3.4          5.1         1.8
+## 3  virginica          7.9         3.8          6.9         2.5
+```
 
 ```r
-mean(2, 4)      #  this passes the function two arguments,
-                #   a vector containing 2 and a vector containing 4
-
-mean(c(2, 4))   #  this passes the function one argument,
-                #   a vector containing first 2 then 4
+aggregate(. ~ Species, data=iris, FUN=function(x) { return(max(x) - 1) } )
 ```
 
+```
+##      Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1     setosa          4.8         3.4          0.9        -0.4
+## 2 versicolor          6.0         2.4          4.1         0.8
+## 3  virginica          6.9         2.8          5.9         1.5
+```
 
-This kind of thing is common in R and an easy way to make a mistake.
 
 ---
 
-## Everything is a vector. Vector of what?
+## Programming: flow control
+
+The first rule of for loops is you do not write explicit for loops.
 
 
 ```r
-class(TRUE); class(T); class(FALSE); class(F);              #  logical
-class(1:10); class(42L);                                    #  integer
-class(42); class(3.7); class(5e7); class(1/89)              #  numeric
-class("Aaron"); class("cow"); class("123"); class("TRUE")   #  character
+x = 0
+for (i in 1:length(iris$Sepal.Length)) {
+    x <- x + iris$Sepal.Length[i]
+}
+x
+```
 
-# And then there are these guys...
-class(factor(c("red", "green", "blue")))                    #  factor
-class(factor(c("medium", "small", "small", "large"),
-             levels=c("small", "medium", "large"),
-             ordered=TRUE))                                 #  ordered factor
+```
+## [1] 876.5
 ```
 
 
-Vectors have exactly one class, and are joined by the `c()` function.
+The above works, but as is often the case it is better to do it the R way:
 
 
 ```r
-c(9, 7, TRUE, FALSE)
-c(9, 7, TRUE, FALSE, "cow")
+(x <- sum(iris$Sepal.Length))
+```
+
+```
+## [1] 876.5
 ```
 
 
@@ -309,224 +293,313 @@ Other things: `NA` (missing), `NULL` (not a thing), `NaN` (`sqrt(-1)`), `Inf` (`
 
 ---
 
-## Vectorized Operations and Recycling
+## Programming: flow control
 
-Most operations happen element-wise.
-
-
-```r
-c(1, 2, 3, 4) + c(100, 1000, 10000, 10000)
-```
-
-```
-## [1]   101  1002 10003 10004
-```
-
-
-If the vectors have different lengths, they shorter one gets 'recycled'.
+The second rule of for loops is you DO NOT write explicit for loops.
 
 
 ```r
-c(1, 2, 3, 4) + c(100, 1000)
+iris$Sepal.Long <- NA
+for (i in 1:length(iris$Sepal.Length)) {
+    if (iris$Sepal.Length[i] > mean(iris$Sepal.Length)) {
+        iris$Sepal.Long[i] <- "yes"
+    } else {
+        iris$Sepal.Long[i] <- "no"
+    }
+}
 ```
 
-```
-## [1]  101 1002  103 1004
+
+Seriously, avoid that. There are vectorized ways to do many things:
+
+
+```r
+iris$Sepal.Long <- ifelse(iris$Sepal.Length > mean(iris$Sepal.Length),
+                          'yes', 'no')
 ```
 
 
 ---
 
-## Vectorized Operations and Recycling
+## Programming: flow control
 
-What will happen with these?
+Of course there are cases where you will want to use flow control, and you can use it:
 
 
 ```r
-c(1, 2) * c(4, 5, 6)
+for (i in 1:10) { print(i) }
+i=0; while (i < 10) { i <- i + 1; print(i) }
+i=0; repeat { i <- i + 1; print(i); if (i == 10) { break }} # `next` is also available
+# There is also a `switch` statment.
+```
 
-1 + 1:10
 
-1:10 / 10
+Be careful with if/else constructs especially if  you might have missing values. What happens here?
 
-1:10 < 5
+
+```r
+i <- NA
+if (i > 3) {
+    print("Big!")
+} else if (i < 3) {
+    print("Small!")
+} else {
+    print("Three!")
+}
 ```
 
 
 ---
 
-## Vectorized Operations and Recycling
+## Data set manipulation
+
+Bind columns with `cbind`:
 
 
 ```r
-c(1, 2) * c(4, 5, 6)
+colors <- cbind(data.frame(Species=c('setosa', 'versicolor')),
+                data.frame(Color=c('pink', 'orange')))
 ```
 
-```
-## Warning: longer object length is not a multiple of shorter object length
-```
 
-```
-## [1]  4 10  6
-```
+Bind rows with `rbind`:
+
 
 ```r
-1 + 1:10
+colors <- rbind(colors,
+                data.frame(Species='virginica', Color='white'))
+colors
 ```
 
 ```
-##  [1]  2  3  4  5  6  7  8  9 10 11
+##      Species  Color
+## 1     setosa   pink
+## 2 versicolor orange
+## 3  virginica  white
 ```
 
 
 ---
 
-## Vectorized Operations and Recycling
+## Data set manipulation
+
+Merging with `merge` is easy and fun. It merges on common column names and does a natural (inner) join by default. See `?merge` for all the details.
 
 
 ```r
-1:10 / 10
+iris <- merge(iris, colors)
+iris[sample(nrow(iris), 6),]
 ```
 
 ```
-##  [1] 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
-```
-
-```r
-1:10 < 5
-```
-
-```
-##  [1]  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+##        Species Sepal.Length Sepal.Width Petal.Length Petal.Width  Color
+## 138  virginica          6.4         3.1          5.5         1.8  white
+## 140  virginica          6.9         3.1          5.4         2.1  white
+## 43      setosa          4.4         3.2          1.3         0.2   pink
+## 123  virginica          7.7         2.8          6.7         2.0  white
+## 94  versicolor          5.0         2.3          3.3         1.0 orange
+## 76  versicolor          6.6         3.0          4.4         1.4 orange
 ```
 
 
 ---
 
-## Things can have names.
+## Data set manipulation
+
+Going from long to wide is easy with the `reshape` package:
 
 
 ```r
-my.vector <- 1:5
-my.vector
+library(reshape)
+iris$Year <- rep(1951:2000, 3)  # Imagine longitudinal flowers. Imagine.
+head(iris)
 ```
 
 ```
-## [1] 1 2 3 4 5
-```
-
-```r
-names(my.vector) <- c("a", "b", "c", "d", "e")  # don't be scared!
-my.vector
-```
-
-```
-## a b c d e 
-## 1 2 3 4 5
+##   Species Sepal.Length Sepal.Width Petal.Length Petal.Width Color Year
+## 1  setosa          5.1         3.5          1.4         0.2  pink 1951
+## 2  setosa          4.9         3.0          1.4         0.2  pink 1952
+## 3  setosa          4.7         3.2          1.3         0.2  pink 1953
+## 4  setosa          4.6         3.1          1.5         0.2  pink 1954
+## 5  setosa          5.0         3.6          1.4         0.2  pink 1955
+## 6  setosa          5.4         3.9          1.7         0.4  pink 1956
 ```
 
 
 ---
 
-## Selecting from vectors with `[ ]`
+## Data set manipulation
+
+Going from wide to long with `melt`:
 
 
 ```r
-my.vector[c(2, 4)]                             # by index numbers
+head(molten <- melt(iris, id = c("Species", "Year")))
 ```
 
 ```
-## b d 
-## 2 4
+##   Species Year     variable value
+## 1  setosa 1951 Sepal.Length   5.1
+## 2  setosa 1952 Sepal.Length   4.9
+## 3  setosa 1953 Sepal.Length   4.7
+## 4  setosa 1954 Sepal.Length   4.6
+## 5  setosa 1955 Sepal.Length     5
+## 6  setosa 1956 Sepal.Length   5.4
 ```
+
+
+The column names `variable` and `value` are just defaults.
+
+---
+
+## Data set manipulation
+
+Going from long to wide with `cast`:
+
 
 ```r
-my.vector[c('c', 'e')]                         # by names
+head(cast(molten))
 ```
 
 ```
-## c e 
-## 3 5
-```
-
-```r
-my.vector[c(TRUE, FALSE, TRUE, FALSE, TRUE)]   # with logicals
-```
-
-```
-## a c e 
-## 1 3 5
+##   Species Year Sepal.Length Sepal.Width Petal.Length Petal.Width Color
+## 1  setosa 1951          5.1         3.5          1.4         0.2  pink
+## 2  setosa 1952          4.9           3          1.4         0.2  pink
+## 3  setosa 1953          4.7         3.2          1.3         0.2  pink
+## 4  setosa 1954          4.6         3.1          1.5         0.2  pink
+## 5  setosa 1955            5         3.6          1.4         0.2  pink
+## 6  setosa 1956          5.4         3.9          1.7         0.4  pink
 ```
 
 
 ---
 
-## Using logical selection
+## Munging strings, dates, etc.
+
+Suppose we want to abbreviate the species names:
 
 
 ```r
-(my.numbers <- sample(1:10, 20, replace = TRUE))
+iris$Species <- substr(iris$Species, 1, 4)  #  'sub-string'
+table(iris$Species)
 ```
 
 ```
-##  [1] 10 10  3  9  7  6  8  2  7  8  5  8 10  3  5 10 10  2  5  6
+## 
+## seto vers virg 
+##   50   50   50
 ```
 
 
-How can we get just the entries less than five?
+Also sometimes useful: `toupper`, `tolower`, `strsplit`.
 
 ---
 
-## Using logical selection
+## Munging strings, dates, etc.
+
+Or remove vowels from the color names:
 
 
 ```r
-my.numbers < 5
+iris$Color <- gsub("[aeiou]", "", iris$Color)  # more commonly used for white-space removal
+table(iris$Color)
 ```
 
 ```
-##  [1] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE
-## [12] FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE FALSE
+## 
+## pnk rng wht 
+##  50  50  50
 ```
+
+
+There is solid support for regular expressions and of course `grep`. See `?regex` and `?grep`.
+
 
 ```r
-my.numbers[my.numbers < 5]
+grep("Length", names(iris), value = TRUE)
 ```
 
 ```
-## [1] 3 2 3 2
+## [1] "Sepal.Length" "Petal.Length"
 ```
 
 
 ---
 
-## Good things to do with vectors
+## Munging strings, dates, etc.
+
+Right now `Year` is an integer.
 
 
 ```r
-length(my.vector)   #  How long is my vector?
+str(iris$Year)
 ```
 
 ```
-## [1] 5
+##  int [1:150] 1951 1952 1953 1954 1955 1956 1957 1958 1959 1960 ...
 ```
 
-```r
-sum(my.vector)      #  What if I add up the numbers in my vector?
-```
 
-```
-## [1] 15
-```
+Let's change it into a date. First, we make it into a character string.
+
 
 ```r
-sum(my.vector < 4)  #  Alternative: length(my.vector[my.vector < 4])
+iris$Date <- as.character(iris$Year)
+str(iris$Date)
 ```
 
 ```
-## [1] 3
+##  chr [1:150] "1951" "1952" "1953" "1954" "1955" "1956" ...
 ```
 
+
+---
+
+## Munging strings, dates, etc.
+
+Now we can make it into a date.
+
+
+```r
+head(as.Date(iris$Date, format = "%Y"))
+```
+
+```
+## [1] "1951-03-13" "1952-03-13" "1953-03-13" "1954-03-13" "1955-03-13"
+## [6] "1956-03-13"
+```
+
+
+By default it takes today's day and month. (For `format` details see `?strptime`.) Let's specify January 1st, by using `paste` to stick strings together.
+
+
+```r
+head(paste(iris$Date, "01", "01", sep = "-"))
+```
+
+```
+## [1] "1951-01-01" "1952-01-01" "1953-01-01" "1954-01-01" "1955-01-01"
+## [6] "1956-01-01"
+```
+
+
+---
+## Munging strings, dates, etc.
+
+Finally, we can make real dates:
+
+
+```r
+iris$Date <- as.Date(paste(iris$Date, "01", "01", sep = "-"))
+class(iris$Date)
+```
+
+```
+## [1] "Date"
+```
+
+
+This will plot more nicely later on. Dates can be a big pain. See also the package `lubridate` if you have to deal with them a lot.
 
 ---
 

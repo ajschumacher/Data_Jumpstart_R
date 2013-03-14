@@ -104,8 +104,7 @@
 <li>Programming: functions</li>
 <li>Programming: flow control (if, for, while, ...)</li>
 <li>Data set manipulation (merge, wide/long, ...)</li>
-<li>String manipulation (substr, grep, sub, ...)</li>
-<li>Class manipulation (factor, string, date, ...)</li>
+<li>Munging strings, dates, etc.</li>
 <li>SQL in R (SELECT * FROM ...)</li>
 <li>2-D plotting (base, lattice, ggplot2, ...)</li>
 <li>Network (graph) visualization</li>
@@ -183,7 +182,7 @@ str(iris)   #  Display structure of data set.
     <h2>Formulas in R</h2>
   </hgroup>
   <article>
-    <p>Model based on a categorical variable, an interaction, the log of a variable, and zero intercept:</p>
+    <p>This model is based on a categorical variable, an interaction, the log of a variable, and zero intercept:</p>
 
 <pre><code class="r">lm(Sepal.Length ~ Species + Species:Petal.Length + log(Petal.Width) - 1, data=iris)
 ?formula  #  More help for model formulas.
@@ -206,24 +205,22 @@ xyplot(Sepal.Length ~ Sepal.Width | Species, data = iris)
 
       <slide class="" id="slide-6" style="background:;">
   <hgroup>
-    <h2>Everything is a function.</h2>
+    <h2>Working with (model) objects</h2>
   </hgroup>
   <article>
-    <p>Even things that don&#39;t look like functions are functions.</p>
+    <p>R functions often return some sort of &#39;results object&#39; which you can continue to work with.</p>
 
-<pre><code class="r">5 + 7
+<p>This is the case for model objects:</p>
+
+<pre><code class="r">my.model &lt;- lm(Sepal.Length ~ . * ., data = iris)  # Create an abominable model.
 </code></pre>
 
-<pre><code>## [1] 12
+<p>The model object contains lots of things, which you can look at this way but likely won&#39;t:</p>
+
+<pre><code class="r">str(my.model)  # View the complete structure of the model object.
 </code></pre>
 
-<pre><code class="r">&quot;+&quot;(5,7)
-</code></pre>
-
-<pre><code>## [1] 12
-</code></pre>
-
-<p>Arithmetic operations are functions.</p>
+<p>(<code>str</code>, like many R functions, is generic - it works on many types of objects.)</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -231,24 +228,27 @@ xyplot(Sepal.Length ~ Sepal.Width | Species, data = iris)
 
       <slide class="" id="slide-7" style="background:;">
   <hgroup>
-    <h2>Everything is a function.</h2>
+    <h2>Working with (model) objects</h2>
   </hgroup>
   <article>
-    <p>Even things that don&#39;t look like functions are functions.</p>
+    <p>Often instead of doing things like this:</p>
 
-<pre><code class="r">&quot;:&quot;(1,10)
+<pre><code class="r">cor(my.model$fitted.values, my.model$model$Sepal.Length)^2
 </code></pre>
 
-<pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10
-</code></pre>
+<p>You can use generic functions like these:</p>
 
-<pre><code class="r">1:10
+<pre><code class="r">my.model  #  This is equivalent to print(my.model)
+summary(my.model)
+deviance(my.model)
+residuals(my.model)
+plot(my.model)
+coef(my.model)
+confint(my.model)
+vcov(my.model)
+predict(my.model,
+        data.frame(Sepal.Width=10, Petal.Length=10, Petal.Width=10, Species=&#39;setosa&#39;))
 </code></pre>
-
-<pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10
-</code></pre>
-
-<p>This is a super handy function! It returns a vector.</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -256,21 +256,26 @@ xyplot(Sepal.Length ~ Sepal.Width | Species, data = iris)
 
       <slide class="" id="slide-8" style="background:;">
   <hgroup>
-    <h2>Everything is a function.</h2>
+    <h2>Programming: functions</h2>
   </hgroup>
   <article>
-    <p>Convenient short-hand is available for other functions too. Get help fast:</p>
+    <p>Functions are objects. You can make your own like this:</p>
 
-<pre><code class="r">?glm             #  This is identical to: help(glm)
+<pre><code class="r">times.four &lt;- function(formal.argument) {
+    four &lt;- 4
+    return(formal.argument * four)
+}
+
+times.four(7)
 </code></pre>
 
-<p>And of course, assign things to variables:</p>
+<pre><code>## [1] 28
+</code></pre>
 
-<pre><code class="r">my.object &lt;- 8   #  You will never see the equivalent: &quot;&lt;-&quot;(my.object, 8)
+<pre><code class="r">print(four)  #  Only exists inside the function.
+</code></pre>
 
-
-
-# Okay, comments aren&#39;t functions.
+<pre><code>## Error: object &#39;four&#39; not found
 </code></pre>
 
   </article>
@@ -279,24 +284,27 @@ xyplot(Sepal.Length ~ Sepal.Width | Species, data = iris)
 
       <slide class="" id="slide-9" style="background:;">
   <hgroup>
-    <h2>Everything is a vector.</h2>
+    <h2>Programming: functions</h2>
   </hgroup>
   <article>
-    <pre><code class="r">42:100
+    <p>Anonymous functions are also frequently useful. Compare these:</p>
+
+<pre><code class="r">aggregate(. ~ Species, data=iris, FUN=max)
 </code></pre>
 
-<pre><code>##  [1]  42  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58
-## [18]  59  60  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75
-## [35]  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90  91  92
-## [52]  93  94  95  96  97  98  99 100
+<pre><code>##      Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1     setosa          5.8         4.4          1.9         0.6
+## 2 versicolor          7.0         3.4          5.1         1.8
+## 3  virginica          7.9         3.8          6.9         2.5
 </code></pre>
 
-<p>The numbers in brackets tell you the position in the vector at the start of the line. So:</p>
-
-<pre><code class="r">42
+<pre><code class="r">aggregate(. ~ Species, data=iris, FUN=function(x) { return(max(x) - 1) } )
 </code></pre>
 
-<pre><code>## [1] 42
+<pre><code>##      Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1     setosa          4.8         3.4          0.9        -0.4
+## 2 versicolor          6.0         2.4          4.1         0.8
+## 3  virginica          6.9         2.8          5.9         1.5
 </code></pre>
 
   </article>
@@ -305,50 +313,27 @@ xyplot(Sepal.Length ~ Sepal.Width | Species, data = iris)
 
       <slide class="" id="slide-10" style="background:;">
   <hgroup>
-    <h2><code>c()</code> is a function that combines vectors</h2>
+    <h2>Programming: flow control</h2>
   </hgroup>
   <article>
-    <pre><code class="r">2, 4      #  this will fail
+    <p>The first rule of for loops is you do not write explicit for loops.</p>
 
-c(2, 4)   #  this will make a vector containing first 2 then 4
+<pre><code class="r">x = 0
+for (i in 1:length(iris$Sepal.Length)) {
+    x &lt;- x + iris$Sepal.Length[i]
+}
+x
 </code></pre>
 
-<p>Very often you will want to pass one vector as an argument to a function.</p>
-
-<pre><code class="r">mean(2, 4)      #  this passes the function two arguments,
-                #   a vector containing 2 and a vector containing 4
-
-mean(c(2, 4))   #  this passes the function one argument,
-                #   a vector containing first 2 then 4
+<pre><code>## [1] 876.5
 </code></pre>
 
-<p>This kind of thing is common in R and an easy way to make a mistake.</p>
+<p>The above works, but as is often the case it is better to do it the R way:</p>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-      <slide class="" id="slide-11" style="background:;">
-  <hgroup>
-    <h2>Everything is a vector. Vector of what?</h2>
-  </hgroup>
-  <article>
-    <pre><code class="r">class(TRUE); class(T); class(FALSE); class(F);              #  logical
-class(1:10); class(42L);                                    #  integer
-class(42); class(3.7); class(5e7); class(1/89)              #  numeric
-class(&quot;Aaron&quot;); class(&quot;cow&quot;); class(&quot;123&quot;); class(&quot;TRUE&quot;)   #  character
-
-# And then there are these guys...
-class(factor(c(&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;)))                    #  factor
-class(factor(c(&quot;medium&quot;, &quot;small&quot;, &quot;small&quot;, &quot;large&quot;),
-             levels=c(&quot;small&quot;, &quot;medium&quot;, &quot;large&quot;),
-             ordered=TRUE))                                 #  ordered factor
+<pre><code class="r">(x &lt;- sum(iris$Sepal.Length))
 </code></pre>
 
-<p>Vectors have exactly one class, and are joined by the <code>c()</code> function.</p>
-
-<pre><code class="r">c(9, 7, TRUE, FALSE)
-c(9, 7, TRUE, FALSE, &quot;cow&quot;)
+<pre><code>## [1] 876.5
 </code></pre>
 
 <p>Other things: <code>NA</code> (missing), <code>NULL</code> (not a thing), <code>NaN</code> (<code>sqrt(-1)</code>), <code>Inf</code> (<code>1/0</code>).</p>
@@ -357,25 +342,56 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-12" style="background:;">
+      <slide class="" id="slide-11" style="background:;">
   <hgroup>
-    <h2>Vectorized Operations and Recycling</h2>
+    <h2>Programming: flow control</h2>
   </hgroup>
   <article>
-    <p>Most operations happen element-wise.</p>
+    <p>The second rule of for loops is you DO NOT write explicit for loops.</p>
 
-<pre><code class="r">c(1, 2, 3, 4) + c(100, 1000, 10000, 10000)
+<pre><code class="r">iris$Sepal.Long &lt;- NA
+for (i in 1:length(iris$Sepal.Length)) {
+    if (iris$Sepal.Length[i] &gt; mean(iris$Sepal.Length)) {
+        iris$Sepal.Long[i] &lt;- &quot;yes&quot;
+    } else {
+        iris$Sepal.Long[i] &lt;- &quot;no&quot;
+    }
+}
 </code></pre>
 
-<pre><code>## [1]   101  1002 10003 10004
+<p>Seriously, avoid that. There are vectorized ways to do many things:</p>
+
+<pre><code class="r">iris$Sepal.Long &lt;- ifelse(iris$Sepal.Length &gt; mean(iris$Sepal.Length),
+                          &#39;yes&#39;, &#39;no&#39;)
 </code></pre>
 
-<p>If the vectors have different lengths, they shorter one gets &#39;recycled&#39;.</p>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
 
-<pre><code class="r">c(1, 2, 3, 4) + c(100, 1000)
+      <slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Programming: flow control</h2>
+  </hgroup>
+  <article>
+    <p>Of course there are cases where you will want to use flow control, and you can use it:</p>
+
+<pre><code class="r">for (i in 1:10) { print(i) }
+i=0; while (i &lt; 10) { i &lt;- i + 1; print(i) }
+i=0; repeat { i &lt;- i + 1; print(i); if (i == 10) { break }} # `next` is also available
+# There is also a `switch` statment.
 </code></pre>
 
-<pre><code>## [1]  101 1002  103 1004
+<p>Be careful with if/else constructs especially if  you might have missing values. What happens here?</p>
+
+<pre><code class="r">i &lt;- NA
+if (i &gt; 3) {
+    print(&quot;Big!&quot;)
+} else if (i &lt; 3) {
+    print(&quot;Small!&quot;)
+} else {
+    print(&quot;Three!&quot;)
+}
 </code></pre>
 
   </article>
@@ -384,18 +400,26 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
 
       <slide class="" id="slide-13" style="background:;">
   <hgroup>
-    <h2>Vectorized Operations and Recycling</h2>
+    <h2>Data set manipulation</h2>
   </hgroup>
   <article>
-    <p>What will happen with these?</p>
+    <p>Bind columns with <code>cbind</code>:</p>
 
-<pre><code class="r">c(1, 2) * c(4, 5, 6)
+<pre><code class="r">colors &lt;- cbind(data.frame(Species=c(&#39;setosa&#39;, &#39;versicolor&#39;)),
+                data.frame(Color=c(&#39;pink&#39;, &#39;orange&#39;)))
+</code></pre>
 
-1 + 1:10
+<p>Bind rows with <code>rbind</code>:</p>
 
-1:10 / 10
+<pre><code class="r">colors &lt;- rbind(colors,
+                data.frame(Species=&#39;virginica&#39;, Color=&#39;white&#39;))
+colors
+</code></pre>
 
-1:10 &lt; 5
+<pre><code>##      Species  Color
+## 1     setosa   pink
+## 2 versicolor orange
+## 3  virginica  white
 </code></pre>
 
   </article>
@@ -404,22 +428,22 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
 
       <slide class="" id="slide-14" style="background:;">
   <hgroup>
-    <h2>Vectorized Operations and Recycling</h2>
+    <h2>Data set manipulation</h2>
   </hgroup>
   <article>
-    <pre><code class="r">c(1, 2) * c(4, 5, 6)
+    <p>Merging with <code>merge</code> is easy and fun. It merges on common column names and does a natural (inner) join by default. See <code>?merge</code> for all the details.</p>
+
+<pre><code class="r">iris &lt;- merge(iris, colors)
+iris[sample(nrow(iris), 6),]
 </code></pre>
 
-<pre><code>## Warning: longer object length is not a multiple of shorter object length
-</code></pre>
-
-<pre><code>## [1]  4 10  6
-</code></pre>
-
-<pre><code class="r">1 + 1:10
-</code></pre>
-
-<pre><code>##  [1]  2  3  4  5  6  7  8  9 10 11
+<pre><code>##        Species Sepal.Length Sepal.Width Petal.Length Petal.Width  Color
+## 138  virginica          6.4         3.1          5.5         1.8  white
+## 140  virginica          6.9         3.1          5.4         2.1  white
+## 43      setosa          4.4         3.2          1.3         0.2   pink
+## 123  virginica          7.7         2.8          6.7         2.0  white
+## 94  versicolor          5.0         2.3          3.3         1.0 orange
+## 76  versicolor          6.6         3.0          4.4         1.4 orange
 </code></pre>
 
   </article>
@@ -428,19 +452,23 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
 
       <slide class="" id="slide-15" style="background:;">
   <hgroup>
-    <h2>Vectorized Operations and Recycling</h2>
+    <h2>Data set manipulation</h2>
   </hgroup>
   <article>
-    <pre><code class="r">1:10 / 10
+    <p>Going from long to wide is easy with the <code>reshape</code> package:</p>
+
+<pre><code class="r">library(reshape)
+iris$Year &lt;- rep(1951:2000, 3)  # Imagine longitudinal flowers. Imagine.
+head(iris)
 </code></pre>
 
-<pre><code>##  [1] 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
-</code></pre>
-
-<pre><code class="r">1:10 &lt; 5
-</code></pre>
-
-<pre><code>##  [1]  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+<pre><code>##   Species Sepal.Length Sepal.Width Petal.Length Petal.Width Color Year
+## 1  setosa          5.1         3.5          1.4         0.2  pink 1951
+## 2  setosa          4.9         3.0          1.4         0.2  pink 1952
+## 3  setosa          4.7         3.2          1.3         0.2  pink 1953
+## 4  setosa          4.6         3.1          1.5         0.2  pink 1954
+## 5  setosa          5.0         3.6          1.4         0.2  pink 1955
+## 6  setosa          5.4         3.9          1.7         0.4  pink 1956
 </code></pre>
 
   </article>
@@ -449,23 +477,24 @@ c(9, 7, TRUE, FALSE, &quot;cow&quot;)
 
       <slide class="" id="slide-16" style="background:;">
   <hgroup>
-    <h2>Things can have names.</h2>
+    <h2>Data set manipulation</h2>
   </hgroup>
   <article>
-    <pre><code class="r">my.vector &lt;- 1:5
-my.vector
+    <p>Going from wide to long with <code>melt</code>:</p>
+
+<pre><code class="r">head(molten &lt;- melt(iris, id = c(&quot;Species&quot;, &quot;Year&quot;)))
 </code></pre>
 
-<pre><code>## [1] 1 2 3 4 5
+<pre><code>##   Species Year     variable value
+## 1  setosa 1951 Sepal.Length   5.1
+## 2  setosa 1952 Sepal.Length   4.9
+## 3  setosa 1953 Sepal.Length   4.7
+## 4  setosa 1954 Sepal.Length   4.6
+## 5  setosa 1955 Sepal.Length     5
+## 6  setosa 1956 Sepal.Length   5.4
 </code></pre>
 
-<pre><code class="r">names(my.vector) &lt;- c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;)  # don&#39;t be scared!
-my.vector
-</code></pre>
-
-<pre><code>## a b c d e 
-## 1 2 3 4 5
-</code></pre>
+<p>The column names <code>variable</code> and <code>value</code> are just defaults.</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -473,28 +502,21 @@ my.vector
 
       <slide class="" id="slide-17" style="background:;">
   <hgroup>
-    <h2>Selecting from vectors with <code>[ ]</code></h2>
+    <h2>Data set manipulation</h2>
   </hgroup>
   <article>
-    <pre><code class="r">my.vector[c(2, 4)]                             # by index numbers
+    <p>Going from long to wide with <code>cast</code>:</p>
+
+<pre><code class="r">head(cast(molten))
 </code></pre>
 
-<pre><code>## b d 
-## 2 4
-</code></pre>
-
-<pre><code class="r">my.vector[c(&#39;c&#39;, &#39;e&#39;)]                         # by names
-</code></pre>
-
-<pre><code>## c e 
-## 3 5
-</code></pre>
-
-<pre><code class="r">my.vector[c(TRUE, FALSE, TRUE, FALSE, TRUE)]   # with logicals
-</code></pre>
-
-<pre><code>## a c e 
-## 1 3 5
+<pre><code>##   Species Year Sepal.Length Sepal.Width Petal.Length Petal.Width Color
+## 1  setosa 1951          5.1         3.5          1.4         0.2  pink
+## 2  setosa 1952          4.9           3          1.4         0.2  pink
+## 3  setosa 1953          4.7         3.2          1.3         0.2  pink
+## 4  setosa 1954          4.6         3.1          1.5         0.2  pink
+## 5  setosa 1955            5         3.6          1.4         0.2  pink
+## 6  setosa 1956          5.4         3.9          1.7         0.4  pink
 </code></pre>
 
   </article>
@@ -503,16 +525,21 @@ my.vector
 
       <slide class="" id="slide-18" style="background:;">
   <hgroup>
-    <h2>Using logical selection</h2>
+    <h2>Munging strings, dates, etc.</h2>
   </hgroup>
   <article>
-    <pre><code class="r">(my.numbers &lt;- sample(1:10, 20, replace = TRUE))
+    <p>Suppose we want to abbreviate the species names:</p>
+
+<pre><code class="r">iris$Species &lt;- substr(iris$Species, 1, 4)  #  &#39;sub-string&#39;
+table(iris$Species)
 </code></pre>
 
-<pre><code>##  [1] 10 10  3  9  7  6  8  2  7  8  5  8 10  3  5 10 10  2  5  6
+<pre><code>## 
+## seto vers virg 
+##   50   50   50
 </code></pre>
 
-<p>How can we get just the entries less than five?</p>
+<p>Also sometimes useful: <code>toupper</code>, <code>tolower</code>, <code>strsplit</code>.</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -520,20 +547,26 @@ my.vector
 
       <slide class="" id="slide-19" style="background:;">
   <hgroup>
-    <h2>Using logical selection</h2>
+    <h2>Munging strings, dates, etc.</h2>
   </hgroup>
   <article>
-    <pre><code class="r">my.numbers &lt; 5
+    <p>Or remove vowels from the color names:</p>
+
+<pre><code class="r">iris$Color &lt;- gsub(&quot;[aeiou]&quot;, &quot;&quot;, iris$Color)  # more commonly used for white-space removal
+table(iris$Color)
 </code></pre>
 
-<pre><code>##  [1] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE
-## [12] FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE FALSE
+<pre><code>## 
+## pnk rng wht 
+##  50  50  50
 </code></pre>
 
-<pre><code class="r">my.numbers[my.numbers &lt; 5]
+<p>There is solid support for regular expressions and of course <code>grep</code>. See <code>?regex</code> and <code>?grep</code>.</p>
+
+<pre><code class="r">grep(&quot;Length&quot;, names(iris), value = TRUE)
 </code></pre>
 
-<pre><code>## [1] 3 2 3 2
+<pre><code>## [1] &quot;Sepal.Length&quot; &quot;Petal.Length&quot;
 </code></pre>
 
   </article>
@@ -542,25 +575,24 @@ my.vector
 
       <slide class="" id="slide-20" style="background:;">
   <hgroup>
-    <h2>Good things to do with vectors</h2>
+    <h2>Munging strings, dates, etc.</h2>
   </hgroup>
   <article>
-    <pre><code class="r">length(my.vector)   #  How long is my vector?
+    <p>Right now <code>Year</code> is an integer.</p>
+
+<pre><code class="r">str(iris$Year)
 </code></pre>
 
-<pre><code>## [1] 5
+<pre><code>##  int [1:150] 1951 1952 1953 1954 1955 1956 1957 1958 1959 1960 ...
 </code></pre>
 
-<pre><code class="r">sum(my.vector)      #  What if I add up the numbers in my vector?
+<p>Let&#39;s change it into a date. First, we make it into a character string.</p>
+
+<pre><code class="r">iris$Date &lt;- as.character(iris$Year)
+str(iris$Date)
 </code></pre>
 
-<pre><code>## [1] 15
-</code></pre>
-
-<pre><code class="r">sum(my.vector &lt; 4)  #  Alternative: length(my.vector[my.vector &lt; 4])
-</code></pre>
-
-<pre><code>## [1] 3
+<pre><code>##  chr [1:150] &quot;1951&quot; &quot;1952&quot; &quot;1953&quot; &quot;1954&quot; &quot;1955&quot; &quot;1956&quot; ...
 </code></pre>
 
   </article>
@@ -568,6 +600,53 @@ my.vector
 </slide>
 
       <slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Munging strings, dates, etc.</h2>
+  </hgroup>
+  <article>
+    <p>Now we can make it into a date.</p>
+
+<pre><code class="r">head(as.Date(iris$Date, format = &quot;%Y&quot;))
+</code></pre>
+
+<pre><code>## [1] &quot;1951-03-13&quot; &quot;1952-03-13&quot; &quot;1953-03-13&quot; &quot;1954-03-13&quot; &quot;1955-03-13&quot;
+## [6] &quot;1956-03-13&quot;
+</code></pre>
+
+<p>By default it takes today&#39;s day and month. (For <code>format</code> details see <code>?strptime</code>.) Let&#39;s specify January 1st, by using <code>paste</code> to stick strings together.</p>
+
+<pre><code class="r">head(paste(iris$Date, &quot;01&quot;, &quot;01&quot;, sep = &quot;-&quot;))
+</code></pre>
+
+<pre><code>## [1] &quot;1951-01-01&quot; &quot;1952-01-01&quot; &quot;1953-01-01&quot; &quot;1954-01-01&quot; &quot;1955-01-01&quot;
+## [6] &quot;1956-01-01&quot;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Munging strings, dates, etc.</h2>
+  </hgroup>
+  <article>
+    <p>Finally, we can make real dates:</p>
+
+<pre><code class="r">iris$Date &lt;- as.Date(paste(iris$Date, &quot;01&quot;, &quot;01&quot;, sep = &quot;-&quot;))
+class(iris$Date)
+</code></pre>
+
+<pre><code>## [1] &quot;Date&quot;
+</code></pre>
+
+<p>This will plot more nicely later on. Dates can be a big pain. See also the package <code>lubridate</code> if you have to deal with them a lot.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-23" style="background:;">
   <hgroup>
     <h2>... Data Frames!</h2>
   </hgroup>
@@ -593,7 +672,7 @@ my.vector
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-22" style="background:;">
+      <slide class="" id="slide-24" style="background:;">
   <hgroup>
     <h2>Working with data frames</h2>
   </hgroup>
@@ -622,7 +701,7 @@ with(my.data, gender)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-23" style="background:;">
+      <slide class="" id="slide-25" style="background:;">
   <hgroup>
     <h2>Working with data frames?</h2>
   </hgroup>
@@ -633,7 +712,7 @@ with(my.data, gender)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-24" style="background:;">
+      <slide class="" id="slide-26" style="background:;">
   <hgroup>
     <h2>Working with data frames!</h2>
   </hgroup>
@@ -654,7 +733,7 @@ subset(my.data, gender == &quot;F&quot;, select = &quot;time&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-25" style="background:;">
+      <slide class="" id="slide-27" style="background:;">
   <hgroup>
     <h2>Working with data frames</h2>
   </hgroup>
@@ -703,7 +782,7 @@ subset(my.data, gender == &quot;F&quot;, select = &quot;time&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-26" style="background:;">
+      <slide class="" id="slide-28" style="background:;">
   <hgroup>
     <h2>Some Statistics</h2>
   </hgroup>
@@ -726,7 +805,7 @@ aov(health1 ~ age + gender, data = my.data)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-27" style="background:;">
+      <slide class="" id="slide-29" style="background:;">
   <hgroup>
     <h2>Base graphics</h2>
   </hgroup>
@@ -750,7 +829,7 @@ plot(my.model)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-28" style="background:;">
+      <slide class="" id="slide-30" style="background:;">
   <hgroup>
     <h2>More!</h2>
   </hgroup>
@@ -773,7 +852,7 @@ library(ggplot2)             # Do this once per R session.
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-29" style="background:;">
+      <slide class="" id="slide-31" style="background:;">
   <hgroup>
     <h2>The source for this presentation</h2>
   </hgroup>
@@ -784,7 +863,7 @@ library(ggplot2)             # Do this once per R session.
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-30" style="background:;">
+      <slide class="" id="slide-32" style="background:;">
   <hgroup>
     <h2>Thank you! Questions! Survey!</h2>
   </hgroup>
