@@ -105,8 +105,8 @@
 <li>Programming: flow control (if, for, while, ...)</li>
 <li>Data set manipulation (merge, wide/long, ...)</li>
 <li>Munging strings, dates, etc.</li>
-<li>SQL in R (SELECT * FROM ...)</li>
-<li>2-D plotting (base, lattice, ggplot2, ...)</li>
+<li>SQL in R (select * from ...)</li>
+<li>2-D plotting (base, lattice, ggplot2)</li>
 <li>Network (graph) visualization</li>
 <li>PCA / clustering / 3-D plotting</li>
 </ul>
@@ -347,8 +347,6 @@ x
 <pre><code>## [1] 876.5
 </code></pre>
 
-<p>Other things: <code>NA</code> (missing), <code>NULL</code> (not a thing), <code>NaN</code> (<code>sqrt(-1)</code>), <code>Inf</code> (<code>1/0</code>).</p>
-
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -469,12 +467,7 @@ iris[sample(nrow(iris), 6),]
     <p>Going from long to wide is easy with the <code>reshape</code> package:</p>
 
 <pre><code class="r">library(reshape)
-</code></pre>
-
-<pre><code>## Error: there is no package called &#39;reshape&#39;
-</code></pre>
-
-<pre><code class="r">iris$Year &lt;- rep(1951:2000, 3)  # Imagine longitudinal flowers. Imagine.
+iris$Year &lt;- rep(1951:2000, 3)  # Imagine longitudinal flowers. Imagine.
 head(iris)
 </code></pre>
 
@@ -501,7 +494,13 @@ head(iris)
 <pre><code class="r">head(molten &lt;- melt(iris, id = c(&quot;Species&quot;, &quot;Year&quot;)))
 </code></pre>
 
-<pre><code>## Error: could not find function &quot;melt&quot;
+<pre><code>##   Species Year     variable value
+## 1  setosa 1951 Sepal.Length   5.1
+## 2  setosa 1952 Sepal.Length   4.9
+## 3  setosa 1953 Sepal.Length   4.7
+## 4  setosa 1954 Sepal.Length   4.6
+## 5  setosa 1955 Sepal.Length     5
+## 6  setosa 1956 Sepal.Length   5.4
 </code></pre>
 
 <p>The column names <code>variable</code> and <code>value</code> are just defaults.</p>
@@ -520,7 +519,13 @@ head(iris)
 <pre><code class="r">head(cast(molten))
 </code></pre>
 
-<pre><code>## Error: could not find function &quot;cast&quot;
+<pre><code>##   Species Year Sepal.Length Sepal.Width Petal.Length Petal.Width Color
+## 1  setosa 1951          5.1         3.5          1.4         0.2  pink
+## 2  setosa 1952          4.9           3          1.4         0.2  pink
+## 3  setosa 1953          4.7         3.2          1.3         0.2  pink
+## 4  setosa 1954          4.6         3.1          1.5         0.2  pink
+## 5  setosa 1955            5         3.6          1.4         0.2  pink
+## 6  setosa 1956          5.4         3.9          1.7         0.4  pink
 </code></pre>
 
   </article>
@@ -644,7 +649,7 @@ str(iris$Date)
 <pre><code>##  Date[1:150], format: &quot;1951-01-01&quot; &quot;1952-01-01&quot; &quot;1953-01-01&quot; &quot;1954-01-01&quot; ...
 </code></pre>
 
-<p>This will plot more nicely later on. Dates can be a big pain. See also the package <code>lubridate</code> if you have to deal with them a lot.</p>
+<p>Dates can be a big pain. See also the package <code>lubridate</code> if you have to deal with them a lot.</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -793,7 +798,23 @@ g
   <article>
     <p>This is popular lately. I describe it on my <a href="http://planspace.org/2013/01/30/visualize-co_occurrence/">blog</a>.</p>
 
-<iframe src="network_graph.txt" /></iframe>
+<pre><code class="r">data &lt;- read.table(header = T, row.names = 1, text = &quot;    the fat cat\none   1   1   0\ntwo   1   0   1\nthree 1   2   1&quot;)
+
+total_occurrences &lt;- colSums(data)
+data_matrix &lt;- as.matrix(data)
+
+co_occurrence &lt;- t(data_matrix) %*% data_matrix
+
+library(igraph)
+graph &lt;- graph.adjacency(co_occurrence, weighted = TRUE, mode = &quot;undirected&quot;, 
+    diag = FALSE)
+
+plot(graph, vertex.label = names(data), vertex.size = total_occurrences * 18, 
+    edge.width = E(graph)$weight * 8)
+
+tkplot(graph, vertex.label = names(data), vertex.size = total_occurrences * 
+    18, edge.width = E(graph)$weight * 8)
+</code></pre>
 
   </article>
   <!-- Presenter Notes -->
@@ -806,7 +827,50 @@ g
   <article>
     <p>This is also fun and described on my <a href="http://planspace.org/2013/02/03/pca-3d-visualization-and-clustering-in-r/">blog</a>.</p>
 
-<iframe src="pca_cluster_3d.txt" /></iframe>
+<pre><code class="r">Iris &lt;- iris
+data(iris)
+iris$Species &lt;- factor(iris$Species, levels = c(&quot;versicolor&quot;, &quot;virginica&quot;, &quot;setosa&quot;))
+
+round(cor(iris[, 1:4]), 2)
+
+pc &lt;- princomp(iris[, 1:4], cor = TRUE, scores = TRUE)
+
+summary(pc)
+
+# scree plot
+plot(pc, type = &quot;lines&quot;)
+
+biplot(pc)
+
+library(rgl)
+plot3d(pc$scores[, 1:3], col = iris$Species)
+
+text3d(pc$scores[, 1:3], texts = rownames(iris))
+text3d(pc$loadings[, 1:3], texts = rownames(pc$loadings), col = &quot;red&quot;)
+coords &lt;- NULL
+for (i in 1:nrow(pc$loadings)) {
+    coords &lt;- rbind(coords, rbind(c(0, 0, 0), pc$loadings[i, 1:3]))
+}
+lines3d(coords, col = &quot;red&quot;, lwd = 4)
+
+set.seed(42)
+cl &lt;- kmeans(iris[, 1:4], 3)
+iris$cluster &lt;- as.factor(cl$cluster)
+
+plot3d(pc$scores[, 1:3], col = iris$cluster, main = &quot;k-means clusters&quot;)
+plot3d(pc$scores[, 1:3], col = iris$Species, main = &quot;actual species&quot;)
+
+with(iris, table(cluster, Species))
+
+di &lt;- dist(iris[, 1:4], method = &quot;euclidean&quot;)
+tree &lt;- hclust(di, method = &quot;ward&quot;)
+iris$hcluster &lt;- as.factor((cutree(tree, k = 3) - 2)%%3 + 1)
+# that modulo business just makes the coming table look nicer
+plot(tree, xlab = &quot;&quot;)
+rect.hclust(tree, k = 3, border = &quot;red&quot;)
+
+with(iris, table(hcluster, Species))
+</code></pre>
 
   </article>
   <!-- Presenter Notes -->
