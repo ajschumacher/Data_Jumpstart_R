@@ -732,13 +732,40 @@ results &lt;- sqldf(&quot;select Species, Date from iris where Petal_Length &gt;
 legend(&quot;topright&quot;, legend = colors$Species, col = colors$Color, pch = 19)
 </code></pre>
 
-<p>More base graphics functions: <code>hist</code>, <code>boxplot</code>, <code>points</code>, <code>lines</code>, <code>text</code>, <code>polygon</code>. The <code>type</code> argument for <code>plot</code> is also worth investigating. To do multiple plots at once, use, e.g., <code>par(mfrow=c(2, 2))</code>.</p>
+<p>More base graphics functions: <code>hist</code>, <code>boxplot</code>, <code>pairs</code>, <code>barplot</code>, <code>points</code>, <code>lines</code>, <code>text</code>, <code>polygon</code>. The <code>type</code> argument for <code>plot</code> is also good. To do multiple plots at once, use, e.g., <code>par(mfrow=c(2, 2))</code>.</p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
       <slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h2>2-D plotting: <code>lattice</code></h2>
+  </hgroup>
+  <article>
+    <p>Loading the <code>lattice</code> package, you can make graphics like this. Some of the options are similar to base graphics, and some are not.</p>
+
+<pre><code class="r">xyplot(Sepal.Length ~ Sepal.Width,
+       data = iris,
+       xlab = &quot;Sepal Width, centimeters&quot;,
+       ylab = &quot;Sepal Length, centimeters&quot;,
+       main = &quot;Sepal Measurements for 150 Irises&quot;,
+       xlim = c(1, 6),
+       ylim = c(4, 9),
+       groups = Species,
+       par.settings = list(superpose.symbol = list(col = colors$Color,
+                                                   pch = 19,
+                                                   cex = 0.8)),
+       auto.key = list(corner=c(1, 1)))
+</code></pre>
+
+<p>More <code>lattice</code> functions: <code>histogram</code>, <code>bwplot</code>, <code>splom</code>, <code>barchart</code>. To do multiple plots at once, usually you want a <code>|</code> conditional in your plotting formula.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-29" style="background:;">
   <hgroup>
     <h2>Working with data frames?</h2>
   </hgroup>
@@ -749,7 +776,7 @@ legend(&quot;topright&quot;, legend = colors$Species, col = colors$Color, pch = 
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-29" style="background:;">
+      <slide class="" id="slide-30" style="background:;">
   <hgroup>
     <h2>Working with data frames!</h2>
   </hgroup>
@@ -770,7 +797,7 @@ subset(my.data, gender == &quot;F&quot;, select = &quot;time&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-30" style="background:;">
+      <slide class="" id="slide-31" style="background:;">
   <hgroup>
     <h2>Working with data frames</h2>
   </hgroup>
@@ -819,7 +846,7 @@ subset(my.data, gender == &quot;F&quot;, select = &quot;time&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-31" style="background:;">
+      <slide class="" id="slide-32" style="background:;">
   <hgroup>
     <h2>Some Statistics</h2>
   </hgroup>
@@ -842,7 +869,7 @@ aov(health1 ~ age + gender, data = my.data)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-32" style="background:;">
+      <slide class="" id="slide-33" style="background:;">
   <hgroup>
     <h2>Base graphics</h2>
   </hgroup>
@@ -866,7 +893,7 @@ plot(my.model)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-33" style="background:;">
+      <slide class="" id="slide-34" style="background:;">
   <hgroup>
     <h2>More!</h2>
   </hgroup>
@@ -889,7 +916,7 @@ library(ggplot2)             # Do this once per R session.
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-34" style="background:;">
+      <slide class="" id="slide-35" style="background:;">
   <hgroup>
     <h2>Thank you! Questions! Survey!</h2>
   </hgroup>

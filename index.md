@@ -673,7 +673,32 @@ legend("topright", legend = colors$Species, col = colors$Color, pch = 19)
 ```
 
 
-More base graphics functions: `hist`, `boxplot`, `points`, `lines`, `text`, `polygon`. The `type` argument for `plot` is also worth investigating. To do multiple plots at once, use, e.g., `par(mfrow=c(2, 2))`.
+More base graphics functions: `hist`, `boxplot`, `pairs`, `barplot`, `points`, `lines`, `text`, `polygon`. The `type` argument for `plot` is also good. To do multiple plots at once, use, e.g., `par(mfrow=c(2, 2))`.
+
+---
+
+## 2-D plotting: `lattice`
+
+Loading the `lattice` package, you can make graphics like this. Some of the options are similar to base graphics, and some are not.
+
+
+```r
+xyplot(Sepal.Length ~ Sepal.Width,
+       data = iris,
+       xlab = "Sepal Width, centimeters",
+       ylab = "Sepal Length, centimeters",
+       main = "Sepal Measurements for 150 Irises",
+       xlim = c(1, 6),
+       ylim = c(4, 9),
+       groups = Species,
+       par.settings = list(superpose.symbol = list(col = colors$Color,
+                                                   pch = 19,
+                                                   cex = 0.8)),
+       auto.key = list(corner=c(1, 1)))
+```
+
+
+More `lattice` functions: `histogram`, `bwplot`, `splom`, `barchart`. To do multiple plots at once, usually you want a `|` conditional in your plotting formula.
 
 ---
 
