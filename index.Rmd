@@ -17,12 +17,6 @@ github:
 
 --- &twocol
 
-```{r setup, echo=FALSE}
-set.seed(42)
-options(stringsAsFactors = FALSE)
-library(ggplot2)
-```
-
 ```{r package_installs, eval=FALSE, echo=FALSE}
 install.packages(c("lattice",
                    "ggplot2",
@@ -30,6 +24,12 @@ install.packages(c("lattice",
                    "rgl",
                    "igraph",
                    "sqldf"))
+```
+
+```{r setup, echo=FALSE}
+set.seed(42)
+options(stringsAsFactors = FALSE)
+library(ggplot2)
 ```
 
 ## [NYU Data Services](http://bit.ly/nyudataservices)
