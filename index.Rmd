@@ -17,10 +17,8 @@ github:
 
 --- &twocol
 
-```{r setup, echo=FALSE,message=FALSE}
-library(ggplot2)
+```{r setup, echo=FALSE}
 set.seed(42)
-options(repos='http://lib.stat.cmu.edu/R/CRAN/')
 ```
 
 ## [NYU Data Services](http://bit.ly/nyudataservices)
@@ -76,6 +74,12 @@ options(repos='http://lib.stat.cmu.edu/R/CRAN/')
 data(iris)  #  Load included data set into your workspace.
 str(iris)   #  Display structure of data set.
 ```
+
+---
+
+## Presentation code:
+
+<iframe src="index.txt" height=600px /></iframe>
 
 ---
 
@@ -155,7 +159,7 @@ Often instead of doing things like this:
 cor(my.model$fitted.values, my.model$model$Sepal.Length)^2
 ```
 
-You can use generic functions like these:
+you can use generic functions like these:
 
 ```{r, eval=FALSE, tidy=FALSE}
 my.model  #  This is equivalent to print(my.model)
@@ -410,16 +414,12 @@ This will plot more nicely later on. Dates can be a big pain. See also the packa
 
 ---
 
-## ... Data Frames!
+## SQL in R
 
-* Matrices are vectors with a number of columns and a number of rows, which should all jive.
-    * Multiplication is element-wise for `*`, matrix-wise for `%*%`.
-* Lists are like vectors where each element could be itself a vector.
-    * Compare `c(1:3, 4)` with `list(1:3, 4)`.
-* Data frames are lists with every vector equal length, and you get row names and column names.
+sql sql sql
 
 ```{r}
-#(my.data <- read.csv('http://bit.ly/NYUdataset'))
+# sql!!!
 ```
 
 ---
@@ -544,12 +544,6 @@ After installing and loading a package, you can use the functions it provides.
 ```{r, fig.align='center', fig.height=2.6, fig.width=5}
 qplot(x=carat, y=price, color=cut, data=diamonds) + theme_bw()
 ```
-
----
-
-## The source for this presentation
-
-<iframe src="index.txt" height=600px /></iframe>
 
 ---
 

@@ -87,6 +87,12 @@ str(iris)   #  Display structure of data set.
 
 ---
 
+## Presentation code:
+
+<iframe src="index.txt" height=600px /></iframe>
+
+---
+
 ## Formulas in R
 
 Formula notation featuring '`~`' is used in various forms across much of R:
@@ -181,7 +187,7 @@ cor(my.model$fitted.values, my.model$model$Sepal.Length)^2
 ```
 
 
-You can use generic functions like these:
+you can use generic functions like these:
 
 
 ```r
@@ -603,17 +609,13 @@ This will plot more nicely later on. Dates can be a big pain. See also the packa
 
 ---
 
-## ... Data Frames!
+## SQL in R
 
-* Matrices are vectors with a number of columns and a number of rows, which should all jive.
-    * Multiplication is element-wise for `*`, matrix-wise for `%*%`.
-* Lists are like vectors where each element could be itself a vector.
-    * Compare `c(1:3, 4)` with `list(1:3, 4)`.
-* Data frames are lists with every vector equal length, and you get row names and column names.
+sql sql sql
 
 
 ```r
-# (my.data <- read.csv('http://bit.ly/NYUdataset'))
+# sql!!!
 ```
 
 
@@ -803,15 +805,9 @@ qplot(x = carat, y = price, color = cut, data = diamonds) + theme_bw()
 ```
 
 ```
-## Error: could not find function "revalue"
+## Error: could not find function "qplot"
 ```
 
-
----
-
-## The source for this presentation
-
-<iframe src="index.txt" height=600px /></iframe>
 
 ---
 
