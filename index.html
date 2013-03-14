@@ -423,14 +423,14 @@ if (i &gt; 3) {
 <p>Bind rows with <code>rbind</code>:</p>
 
 <pre><code class="r">colors &lt;- rbind(colors,
-                data.frame(Species=&#39;virginica&#39;, Color=&#39;white&#39;))
+                data.frame(Species=&#39;virginica&#39;, Color=&#39;purple&#39;))
 colors
 </code></pre>
 
 <pre><code>##      Species  Color
 ## 1     setosa   pink
 ## 2 versicolor orange
-## 3  virginica  white
+## 3  virginica purple
 </code></pre>
 
   </article>
@@ -449,10 +449,10 @@ iris[sample(nrow(iris), 6),]
 </code></pre>
 
 <pre><code>##        Species Sepal.Length Sepal.Width Petal.Length Petal.Width  Color
-## 138  virginica          6.4         3.1          5.5         1.8  white
-## 140  virginica          6.9         3.1          5.4         2.1  white
+## 138  virginica          6.4         3.1          5.5         1.8 purple
+## 140  virginica          6.9         3.1          5.4         2.1 purple
 ## 43      setosa          4.4         3.2          1.3         0.2   pink
-## 123  virginica          7.7         2.8          6.7         2.0  white
+## 123  virginica          7.7         2.8          6.7         2.0 purple
 ## 94  versicolor          5.0         2.3          3.3         1.0 orange
 ## 76  versicolor          6.6         3.0          4.4         1.4 orange
 </code></pre>
@@ -563,13 +563,13 @@ table(iris$Species)
   <article>
     <p>Or remove vowels from the color names:</p>
 
-<pre><code class="r">iris$Color &lt;- gsub(&quot;[aeiou]&quot;, &quot;&quot;, iris$Color)  # more commonly used for white-space removal
-table(iris$Color)
+<pre><code class="r">iris$Clr &lt;- gsub(&quot;[aeiou]&quot;, &quot;&quot;, iris$Color)  # more commonly used for white-space removal
+table(iris$Clr)
 </code></pre>
 
 <pre><code>## 
-## pnk rng wht 
-##  50  50  50
+##  pnk prpl  rng 
+##   50   50   50
 </code></pre>
 
 <p>There is solid support for regular expressions and of course <code>grep</code>. See <code>?regex</code> and <code>?grep</code>.</p>
@@ -620,8 +620,8 @@ str(iris$Date)
 <pre><code class="r">head(as.Date(iris$Date, format = &quot;%Y&quot;))
 </code></pre>
 
-<pre><code>## [1] &quot;1951-03-13&quot; &quot;1952-03-13&quot; &quot;1953-03-13&quot; &quot;1954-03-13&quot; &quot;1955-03-13&quot;
-## [6] &quot;1956-03-13&quot;
+<pre><code>## [1] &quot;1951-03-14&quot; &quot;1952-03-14&quot; &quot;1953-03-14&quot; &quot;1954-03-14&quot; &quot;1955-03-14&quot;
+## [6] &quot;1956-03-14&quot;
 </code></pre>
 
 <p>By default it takes today&#39;s day and month. (For <code>format</code> details see <code>?strptime</code>.) Let&#39;s specify January 1st, by using <code>paste</code> to stick strings together.</p>
@@ -645,10 +645,10 @@ str(iris$Date)
     <p>Finally, we can make real dates:</p>
 
 <pre><code class="r">iris$Date &lt;- as.Date(paste(iris$Date, &quot;01&quot;, &quot;01&quot;, sep = &quot;-&quot;))
-class(iris$Date)
+str(iris$Date)
 </code></pre>
 
-<pre><code>## [1] &quot;Date&quot;
+<pre><code>##  Date[1:150], format: &quot;1951-01-01&quot; &quot;1952-01-01&quot; &quot;1953-01-01&quot; &quot;1954-01-01&quot; ...
 </code></pre>
 
 <p>This will plot more nicely later on. Dates can be a big pain. See also the package <code>lubridate</code> if you have to deal with them a lot.</p>
@@ -662,10 +662,14 @@ class(iris$Date)
     <h2>SQL in R</h2>
   </hgroup>
   <article>
-    <p>sql sql sql</p>
+    <p>Structured Query Language (SQL) is very popular for working with data, especially when that data lives in a relational database.</p>
 
-<pre><code class="r"># sql!!!
-</code></pre>
+<p>There are two main ways that SQL can be used in R:</p>
+
+<ul>
+<li>R can act as a client of an external relational database and pull in data with SQL queries.</li>
+<li>R can generate and use a relational database on the fly using data already in R, which can be convenient and sometimes more performant.</li>
+</ul>
 
   </article>
   <!-- Presenter Notes -->
@@ -673,34 +677,68 @@ class(iris$Date)
 
       <slide class="" id="slide-25" style="background:;">
   <hgroup>
-    <h2>Working with data frames</h2>
+    <h2>SQL in R</h2>
   </hgroup>
   <article>
-    <pre><code class="r">str(my.data)
-summary(my.data)
+    <p>R can act as a client of an external relational database and pull in data with SQL queries.</p>
+
+<p>This example connects to a Microsoft SQL Server database and pulls some data in from it.</p>
+
+<pre><code class="r">library(RODBC)
+db27 &lt;- odbcDriverConnect(&quot;driver={SQL Server};server=mtsqlvs27\\mtsqlins27;trusted_connection=true&quot;)
+results &lt;- sqlQuery(db27, &quot;select * from spr_int.prl.raw_register_audit where year = 2012&quot;)
 </code></pre>
 
-<p>You can access a particular vector in a list or data frame in several ways:</p>
-
-<pre><code class="r">my.data$gender
-my.data[[2]]
-my.data[[&quot;gender&quot;]]
-with(my.data, gender)
-</code></pre>
-
-<p>You can subset using <code>[row(s), column(s)]</code>, both parts just like selecting from a single vector.</p>
-
-<pre><code class="r">my.data[2, &quot;age&quot;]
-</code></pre>
-
-<pre><code>## Error: object &#39;my.data&#39; not found
-</code></pre>
+<p>The particular library and/or connect string will vary depending on the database you&#39;re connecting to.</p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
       <slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>SQL in R</h2>
+  </hgroup>
+  <article>
+    <p>R can generate and use a relational database on the fly using data already in R, which can be convenient and sometimes more performant.</p>
+
+<pre><code class="r">library(sqldf)
+results &lt;- sqldf(&quot;select Species, Date from iris where Petal_Length &gt; 2 limit 6&quot;)
+</code></pre>
+
+<p>SQL is a well-known and fairly powerful language for data manipulation. Some people will find it easier to use SQL selects and joins than native R equivalents for working with data.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>2-D plotting: base graphics</h2>
+  </hgroup>
+  <article>
+    <p>Without loading any packages, you can make graphics like this. There are a range of plotting functions, but many of the argument names are consistent across them.</p>
+
+<pre><code class="r">plot(Sepal.Length ~ Sepal.Width,
+     col = Color,
+     data = iris,
+     xlab = &quot;Sepal Width, centimeters&quot;,
+     ylab = &quot;Sepal Length, centimeters&quot;,
+     main = &quot;Sepal Measurements for 150 Irises&quot;,
+     pch = 19,
+     cex = 0.8,
+     xlim = c(1, 6),
+     ylim = c(4, 9))
+legend(&quot;topright&quot;, legend = colors$Species, col = colors$Color, pch = 19)
+</code></pre>
+
+<p>More base graphics functions: <code>hist</code>, <code>boxplot</code>, <code>points</code>, <code>lines</code>, <code>text</code>, <code>polygon</code>. The <code>type</code> argument for <code>plot</code> is also worth investigating. To do multiple plots at once, use, e.g., <code>par(mfrow=c(2, 2))</code>.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-28" style="background:;">
   <hgroup>
     <h2>Working with data frames?</h2>
   </hgroup>
@@ -711,7 +749,7 @@ with(my.data, gender)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-27" style="background:;">
+      <slide class="" id="slide-29" style="background:;">
   <hgroup>
     <h2>Working with data frames!</h2>
   </hgroup>
@@ -732,7 +770,7 @@ subset(my.data, gender == &quot;F&quot;, select = &quot;time&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-28" style="background:;">
+      <slide class="" id="slide-30" style="background:;">
   <hgroup>
     <h2>Working with data frames</h2>
   </hgroup>
@@ -781,7 +819,7 @@ subset(my.data, gender == &quot;F&quot;, select = &quot;time&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-29" style="background:;">
+      <slide class="" id="slide-31" style="background:;">
   <hgroup>
     <h2>Some Statistics</h2>
   </hgroup>
@@ -804,7 +842,7 @@ aov(health1 ~ age + gender, data = my.data)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-30" style="background:;">
+      <slide class="" id="slide-32" style="background:;">
   <hgroup>
     <h2>Base graphics</h2>
   </hgroup>
@@ -828,7 +866,7 @@ plot(my.model)
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-31" style="background:;">
+      <slide class="" id="slide-33" style="background:;">
   <hgroup>
     <h2>More!</h2>
   </hgroup>
@@ -851,7 +889,7 @@ library(ggplot2)             # Do this once per R session.
   <!-- Presenter Notes -->
 </slide>
 
-      <slide class="" id="slide-32" style="background:;">
+      <slide class="" id="slide-34" style="background:;">
   <hgroup>
     <h2>Thank you! Questions! Survey!</h2>
   </hgroup>

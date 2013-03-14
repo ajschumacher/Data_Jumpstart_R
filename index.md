@@ -373,7 +373,7 @@ Bind rows with `rbind`:
 
 ```r
 colors <- rbind(colors,
-                data.frame(Species='virginica', Color='white'))
+                data.frame(Species='virginica', Color='purple'))
 colors
 ```
 
@@ -381,7 +381,7 @@ colors
 ##      Species  Color
 ## 1     setosa   pink
 ## 2 versicolor orange
-## 3  virginica  white
+## 3  virginica purple
 ```
 
 
@@ -399,10 +399,10 @@ iris[sample(nrow(iris), 6),]
 
 ```
 ##        Species Sepal.Length Sepal.Width Petal.Length Petal.Width  Color
-## 138  virginica          6.4         3.1          5.5         1.8  white
-## 140  virginica          6.9         3.1          5.4         2.1  white
+## 138  virginica          6.4         3.1          5.5         1.8 purple
+## 140  virginica          6.9         3.1          5.4         2.1 purple
 ## 43      setosa          4.4         3.2          1.3         0.2   pink
-## 123  virginica          7.7         2.8          6.7         2.0  white
+## 123  virginica          7.7         2.8          6.7         2.0 purple
 ## 94  versicolor          5.0         2.3          3.3         1.0 orange
 ## 76  versicolor          6.6         3.0          4.4         1.4 orange
 ```
@@ -507,14 +507,14 @@ Or remove vowels from the color names:
 
 
 ```r
-iris$Color <- gsub("[aeiou]", "", iris$Color)  # more commonly used for white-space removal
-table(iris$Color)
+iris$Clr <- gsub("[aeiou]", "", iris$Color)  # more commonly used for white-space removal
+table(iris$Clr)
 ```
 
 ```
 ## 
-## pnk rng wht 
-##  50  50  50
+##  pnk prpl  rng 
+##   50   50   50
 ```
 
 
@@ -571,8 +571,8 @@ head(as.Date(iris$Date, format = "%Y"))
 ```
 
 ```
-## [1] "1951-03-13" "1952-03-13" "1953-03-13" "1954-03-13" "1955-03-13"
-## [6] "1956-03-13"
+## [1] "1951-03-14" "1952-03-14" "1953-03-14" "1954-03-14" "1955-03-14"
+## [6] "1956-03-14"
 ```
 
 
@@ -597,11 +597,11 @@ Finally, we can make real dates:
 
 ```r
 iris$Date <- as.Date(paste(iris$Date, "01", "01", sep = "-"))
-class(iris$Date)
+str(iris$Date)
 ```
 
 ```
-## [1] "Date"
+##  Date[1:150], format: "1951-01-01" "1952-01-01" "1953-01-01" "1954-01-01" ...
 ```
 
 
@@ -611,47 +611,69 @@ This will plot more nicely later on. Dates can be a big pain. See also the packa
 
 ## SQL in R
 
-sql sql sql
+Structured Query Language (SQL) is very popular for working with data, especially when that data lives in a relational database.
 
+There are two main ways that SQL can be used in R:
 
-```r
-# sql!!!
-```
-
+* R can act as a client of an external relational database and pull in data with SQL queries.
+* R can generate and use a relational database on the fly using data already in R, which can be convenient and sometimes more performant.
 
 ---
 
-## Working with data frames
+## SQL in R
+
+R can act as a client of an external relational database and pull in data with SQL queries.
+
+This example connects to a Microsoft SQL Server database and pulls some data in from it.
 
 
 ```r
-str(my.data)
-summary(my.data)
+library(RODBC)
+db27 <- odbcDriverConnect("driver={SQL Server};server=mtsqlvs27\\mtsqlins27;trusted_connection=true")
+results <- sqlQuery(db27, "select * from spr_int.prl.raw_register_audit where year = 2012")
 ```
 
 
-You can access a particular vector in a list or data frame in several ways:
+The particular library and/or connect string will vary depending on the database you're connecting to.
+
+---
+
+## SQL in R
+
+R can generate and use a relational database on the fly using data already in R, which can be convenient and sometimes more performant.
 
 
 ```r
-my.data$gender
-my.data[[2]]
-my.data[["gender"]]
-with(my.data, gender)
+library(sqldf)
+results <- sqldf("select Species, Date from iris where Petal_Length > 2 limit 6")
 ```
 
 
-You can subset using `[row(s), column(s)]`, both parts just like selecting from a single vector.
+SQL is a well-known and fairly powerful language for data manipulation. Some people will find it easier to use SQL selects and joins than native R equivalents for working with data.
+
+---
+
+## 2-D plotting: base graphics
+
+Without loading any packages, you can make graphics like this. There are a range of plotting functions, but many of the argument names are consistent across them.
 
 
 ```r
-my.data[2, "age"]
+plot(Sepal.Length ~ Sepal.Width,
+     col = Color,
+     data = iris,
+     xlab = "Sepal Width, centimeters",
+     ylab = "Sepal Length, centimeters",
+     main = "Sepal Measurements for 150 Irises",
+     pch = 19,
+     cex = 0.8,
+     xlim = c(1, 6),
+     ylim = c(4, 9))
+legend("topright", legend = colors$Species, col = colors$Color, pch = 19)
 ```
 
-```
-## Error: object 'my.data' not found
-```
 
+More base graphics functions: `hist`, `boxplot`, `points`, `lines`, `text`, `polygon`. The `type` argument for `plot` is also worth investigating. To do multiple plots at once, use, e.g., `par(mfrow=c(2, 2))`.
 
 ---
 
