@@ -1,3 +1,3 @@
-# Intermediate Topics in R
+# Data Jumpstart with R
 
-My NYU Data Services Intermediate Topics in R slides in progress.
+A special session for the Digital Literacy class. Zero to [kaggle](http://www.kaggle.com/) submission in 1.25 hours.
