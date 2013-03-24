@@ -1,9 +1,9 @@
 ---
 
-title       : Intermediate Topics in R
-subtitle    : bit.ly/NYUtopicR
-author      : Aaron Schumacher
-job         : Senior Data Services Specialist
+title       : "Data Jumpstart : R"
+subtitle    : "bit.ly/NYUjumpstartR : #NYUjumpstartR"
+author      : "Aaron Schumacher : aaron.schumacher@nyu.edu : @planarrowspace"
+job         : "Senior Data Services Specialist : NYU Data Services"
 biglogo     : data_services_logo.png
 framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
 highlighter : highlight.js  # {highlight.js, prettify, highlight}
@@ -13,15 +13,94 @@ mode        : selfcontained # {standalone, draft}
 license     : by-nc-sa
 github:
   user: ajschumacher
-  repo: Topics_in_R
+  repo: Data_Jumpstart_R
+
+---
+
+
+
+
+<center>
+ <a style='border-bottom:none;' href='http://hbr.org/2012/10/data-scientist-the-sexiest-job-of-the-21st-century/'>
+  <img src='assets/img/sexy.png' height='600px' />
+ </a>
+</center>
+
+---
+
+## Classwork
+
+If you haven't yet, join these sites:
+
+* [meetup](http://www.meetup.com/)
+* [github](https://github.com/)
+* [kaggle](http://www.kaggle.com/)
+
+---
+
+<center>
+ <a style='border-bottom:none;' href='http://www.meetup.com/'>
+  <img src='assets/img/meetup.png' height='600px' />
+ </a>
+</center>
+
+---
+<center>
+ <a style='border-bottom:none;' href='https://github.com/'>
+  <img src='assets/img/github.png' height='600px' />
+ </a>
+</center>
+
+---
+
+<center>
+ <a style='border-bottom:none;' href='http://www.kaggle.com/'>
+  <img src='assets/img/kaggle.png' height='600px' />
+ </a>
+</center>
+
+---
+
+## Homework
+
+If you haven't yet, do these cool things:
+
+* Participate in a good tech meetup.
+* Learn git and use github for a project.
+* Enter a kaggle competition.
+
+---
+
+<center>
+ <a style='border-bottom:none;' href='http://www.meetup.com/how-to-javascript/events/97065712/'>
+  <img src='assets/img/meetup-html5.png' height='600px' />
+ </a>
+</center>
+
+---
+<center>
+ <a style='border-bottom:none;' href='http://try.github.com/'>
+  <img src='assets/img/github-try.png' height='600px' />
+ </a>
+</center>
+
+---
+
+<center>
+ <a style='border-bottom:none;' href='http://www.kaggle.com/c/digit-recognizer/prospector#76'>
+  <img src='assets/img/kaggle-digit.png' height='600px' />
+ </a>
+</center>
+
+---
+
+<center>
+ <a style='border-bottom:none;' href='http://datascience.nyu.edu/yann-lecun-and-john-langford-co-teaching-new-course-large-scale-machine-learning-and-big-data/'>
+  <img src='assets/img/nyuDS.png' height='600px' />
+ </a>
+</center>
 
 --- &twocol
-
-
-
-
-
-
 
 ## [NYU Data Services](http://bit.ly/nyudataservices)
 
@@ -572,8 +651,8 @@ head(as.Date(iris$Date, format = "%Y"))
 ```
 
 ```
-## [1] "1951-03-14" "1952-03-14" "1953-03-14" "1954-03-14" "1955-03-14"
-## [6] "1956-03-14"
+## [1] "1951-03-24" "1952-03-24" "1953-03-24" "1954-03-24" "1955-03-24"
+## [6] "1956-03-24"
 ```
 
 
