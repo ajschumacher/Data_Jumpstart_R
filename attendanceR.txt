@@ -56,7 +56,7 @@ schools <- merge(loc, attd, by.x="dbn",by.y="DBN")
 
 # Note that we just merged very recent attendance with historical
 # data, losing some things along the way, and the following demonstrations
-# are demonstrations and not necessarily good ideas.
+# are demonstrations and not necessarily good ideas. (Danger zone!)
 
 
 # Now we can start looking at things geographically/graphically.
@@ -72,51 +72,3 @@ qplot(x=long, y=lat, color=pct, size=sqrt(X2011enrollment), data=schools) +
 plot(X2011performance ~ pct, data=schools, pch=19, cex=0.3)
 model <- lm(X2011performance ~ pct, data=schools)
 abline(model, col='red')
-
-
-
-# Load this data:
-data(iris)
-# Take a look at the structure of the data set:
-str(iris)
-
-# add together one `ggplot` call,
-# one or more `aes` calls each with your choice of variable,
-# probably one `geom` call,
-# and so on!
-# For example:
-ggplot(data = iris) + aes(x = Petal.Length) + geom_histogram()
-
-# `ggplot` call gets you started:
-ggplot(data = iris)
-# You can also check out all the documentation for ggplot2 here:
-browseURL("http://docs.ggplot2.org/")
-
-# `aes`thetics attach data to dimensions:
-aes(x = Petal.Length) # the x axis
-aes(y = Petal.Width)  # the y axis
-aes(color = Species)  # color (of outlines)
-aes(fill = Species)   # color (of interiors)
-aes(shape = Species)  # shape (of points)
-aes(size = Sepal.Length) # size (of points, usually)
-aes(alpha = Sepal.Width) # 'alpha' (transparency)
-
-# `geom` specifies what to draw
-geom_histogram()
-geom_density()
-geom_dotplot()
-geom_point()
-geom_bin2d()
-geom_hex()
-
-
-# small multiples, vertical or horizontal:
-facet_grid(Species ~ .)
-facet_grid(. ~ Species)
-
-# add this theme, if you want:
-theme_bw()
-# check the help for further customization:
-?theme
-
-ggplot(data = iris) + aes(x = Petal.Length) + geom_point()

@@ -179,6 +179,12 @@ If you haven't yet, do these cool things:
 ---
 
 <center>
+  <img src='assets/img/archer_head.png' />
+</center>
+
+---
+
+<center>
  <a style='border-bottom:none;' href='http://datascience.nyu.edu/yann-lecun-and-john-langford-co-teaching-new-course-large-scale-machine-learning-and-big-data/'>
   <img src='assets/img/nyuDS.png' height='600px' />
  </a>
@@ -323,7 +329,7 @@ If you haven't yet, do these cool things:
 
 --- &twocol
 
-## Data Services workshops on R
+## Things we won't cover today:
 
 *** left
 
@@ -355,29 +361,25 @@ Intermediate Topics in R:
 
 ---
 
-## Data set: `iris`
+## RStudio
 
-
-```r
-data(iris)  #  Load included data set into your workspace.
-str(iris)   #  Display structure of data set.
-```
-
-```
-## 'data.frame':	150 obs. of  5 variables:
-##  $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
-##  $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
-##  $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
-##  $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
-##  $ Species     : Factor w/ 3 levels "setosa","versicolor",..: 1 1 1 1 1 1 1 1 1 1 ...
-```
-
+<center>
+ <a style='border-bottom:none;' href='http://www.rstudio.com/'>
+  <img src='assets/img/RStudio.png' height='500px' />
+ </a>
+</center>
 
 ---
 
-## Presentation code:
+## R walk-through: attendance data:
 
-<iframe src="index.txt" height=600px /></iframe>
+<iframe src="attendanceR.txt" height=600px /></iframe>
+
+---
+
+## R exploring: plotting with `ggplot2`
+
+<iframe src="ggplottingR.txt" height=600px /></iframe>
 
 ---
 
@@ -414,3 +416,8 @@ str(iris)   #  Display structure of data set.
 ---
 
 ## Thank you! Questions! Be great!
+
+<center>
+### [bit.ly/nyudataservices](http://bit.ly/nyudataservices)
+### [data.services@nyu.edu](mailto:data.services@nyu.edu)
+</center>
