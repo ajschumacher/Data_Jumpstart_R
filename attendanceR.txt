@@ -5,7 +5,7 @@ install.packages("XML", "ggplot2")
 browseURL("http://schools.nyc.gov/AboutUs/data/Attendance.htm")
 
 # And now we can download the data.
-raw_xml <- readLines('http://schools.nyc.gov/aboutus/data/attendancexml/')
+raw_xml <- readLines('http://bit.ly/20130322xml')
 
 # Here are the first hundred characters of that:
 cat(substr(raw_xml, 1, 100))

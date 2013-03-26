@@ -333,7 +333,7 @@ If you haven't yet, do these cool things:
 
 *** left
 
-Introduction to R:
+[Introduction to R](http://bit.ly/NYUintroR):
 
 * Why use R?
 * What is R / RStudio?
@@ -346,7 +346,7 @@ Introduction to R:
 
 *** right
 
-Intermediate Topics in R:
+[Intermediate Topics in R](http://bit.ly/NYUtopicR)
 
 * Formulas in R (for models, plots, ...)
 * Working with (model) objects (lm, glm, ...)
