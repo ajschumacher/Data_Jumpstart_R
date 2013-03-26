@@ -378,8 +378,8 @@ If you haven't yet, do these cool things:
 
 * NYCDOE releases daily preliminary attendance figures per school and overall.
     * (link next page)
-* My little project to archive and help popularize the data:
-    * [bit.ly/NYCattdarch](http://bit.ly/NYCattdarch) (archive github repo)
+* My project to archive and help popularize the data:
+    * [bit.ly/NYCattdarch](http://bit.ly/NYCattdarch) (archive in github repo)
     * [@NYCattends](https://twitter.com/NYCattends) (semi-automated account)
 
 ---
@@ -417,6 +417,24 @@ If you haven't yet, do these cool things:
 ## R exploring: plotting with `ggplot2`
 
 <iframe src="ggplottingR.txt" height=600px /></iframe>
+
+---
+
+## Further opportunities
+
+* tutorials/workshops/talks
+* independent resources
+
+---
+
+## tutorials/workshops/talks
+
+* Tonight! "Scraping twitter and other data with R"
+    * with Pablo Barberà, author of the `streamR` package
+    * 6:00 pm today (2013-03-26), third-floor lab, 19 W 4th
+    * offered by the [Politics Data Lab](http://www.nyu.edu/projects/politicsdatalab/)
+* Full range of future Data Services offerings:
+    * [bit.ly/datatutorials](http://bit.ly/datatutorials)
 
 ---
 
