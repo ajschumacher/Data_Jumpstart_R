@@ -374,6 +374,24 @@ If you haven't yet, do these cool things:
 
 ---
 
+## Data set: NYC public school attendance
+
+* NYCDOE releases daily preliminary attendance figures per school and overall.
+    * (link next page)
+* My little project to archive and help popularize the data:
+    * [bit.ly/NYCattdarch](http://bit.ly/NYCattdarch) (archive github repo)
+    * [@NYCattends](https://twitter.com/NYCattends) (semi-automated account)
+
+---
+
+<center>
+ <a style='border-bottom:none;' href='http://bit.ly/NYCattends'>
+  <img src='assets/img/attd.png' height='600px' />
+ </a>
+</center>
+
+---
+
 ## R walk-through: attendance data:
 
 <iframe src="attendanceR.txt" height=600px /></iframe>
