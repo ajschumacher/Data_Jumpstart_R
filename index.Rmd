@@ -398,6 +398,22 @@ If you haven't yet, do these cool things:
 
 ---
 
+## Data set: iris measurements
+
+* Classic data set used in examples like this.
+* 150 flowers measured 4 ways each, 50 each of 3 species
+* Flowers are pretty.
+
+---
+
+<center>
+ <a style='border-bottom:none;' href='http://en.wikipedia.org/wiki/Iris_flower_data_set'>
+  <img src='assets/img/virginica.jpg' height='600px' />
+ </a>
+</center>
+
+---
+
 ## R exploring: plotting with `ggplot2`
 
 <iframe src="ggplottingR.txt" height=600px /></iframe>
